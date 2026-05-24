@@ -20,26 +20,26 @@ Bot ini berbeda dari ChatGPT. Dia:
 
 **2. Buka Terminal, pilih folder, lalu jalankan wizard:**
 
-Pertama, buat folder khusus untuk SohibBot. Jangan langsung taruh di Documents — buat subfolder sendiri supaya rapi dan tidak tercampur file lain.
+Pertama, buat folder khusus untuk bot kamu. Beri nama sesuai nama bot yang kamu mau — misalnya `ARIA`, `NOVA`, atau apapun. Jangan langsung taruh di Documents — buat subfolder sendiri supaya rapi dan tidak tercampur file lain.
 
-- **Mac** — buka Finder → Documents → klik kanan → New Folder → beri nama `SohibBot`
-- **Windows** — buka File Explorer → `C:\Users\NamaKamu\Documents` → klik kanan → New → Folder → beri nama `SohibBot`
-- **Linux** — buka File Manager → Documents → klik kanan → New Folder → beri nama `SohibBot`
+- **Mac** — buka Finder → Documents → klik kanan → New Folder → beri nama sesuai nama botmu
+- **Windows** — buka File Explorer → `C:\Users\NamaKamu\Documents` → klik kanan → New → Folder → beri nama sesuai nama botmu
+- **Linux** — buka File Manager → Documents → klik kanan → New Folder → beri nama sesuai nama botmu
 
 Kedua, buka Terminal (aplikasi untuk ketik perintah):
 - **Mac** — tekan `Command + Spasi`, ketik `Terminal`, Enter
 - **Windows** — tekan `Windows + R`, ketik `cmd`, Enter
 - **Linux** — tekan `Ctrl + Alt + T`
 
-Ketiga, masuk ke folder yang baru dibuat tadi:
+Ketiga, masuk ke folder yang baru dibuat tadi. Ganti `NamaBot` dengan nama folder yang kamu buat:
 
 - **Mac/Linux:**
   ```bash
-  cd ~/Documents/SohibBot
+  cd ~/Documents/NamaBot
   ```
 - **Windows:**
   ```cmd
-  cd %USERPROFILE%\Documents\SohibBot
+  cd %USERPROFILE%\Documents\NamaBot
   ```
 
 Keempat, jalankan perintah berikut satu per satu (copy-paste, Enter setiap baris):
