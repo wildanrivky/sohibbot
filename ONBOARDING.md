@@ -92,6 +92,32 @@ sudo apt update && sudo apt install python3.11 python3.11-venv
 
 ## 5. Step 3 — Download SohibBot
 
+**Pertama, buat folder khusus untuk bot kamu.**
+
+Jangan langsung taruh di Documents — buat subfolder sendiri supaya tidak tercampur file lain. Beri nama sesuai nama bot yang kamu mau (contoh: `ARIA`, `NOVA`, atau apapun).
+
+- **Mac** — buka Finder → Documents → klik kanan → New Folder → beri nama botmu → Enter
+- **Windows** — buka File Explorer → Documents → klik kanan → New → Folder → beri nama botmu → Enter
+- **Linux** — buka File Manager → Documents → klik kanan → New Folder → beri nama botmu
+
+**Kemudian, buka Terminal dan masuk ke folder tersebut:**
+
+- **Mac** — tekan `Command + Spasi`, ketik `Terminal`, Enter. Lalu ketik:
+  ```bash
+  cd ~/Documents/NamaBot
+  ```
+  Ganti `NamaBot` dengan nama folder yang baru kamu buat.
+
+- **Windows** — tekan `Windows + R`, ketik `cmd`, Enter. Lalu ketik:
+  ```cmd
+  cd %USERPROFILE%\Documents\NamaBot
+  ```
+
+- **Linux** — tekan `Ctrl + Alt + T`. Lalu ketik:
+  ```bash
+  cd ~/Documents/NamaBot
+  ```
+
 **Cara A (punya Git — lebih mudah untuk update nanti):**
 ```bash
 git clone https://github.com/wildanrivky/sohibbot.git
@@ -102,11 +128,11 @@ cd sohibbot
 1. Buka `https://github.com/wildanrivky/sohibbot`
 2. Klik tombol hijau "Code"
 3. Klik "Download ZIP"
-4. Extract ZIP ke folder Documents (atau folder lain yang mudah diakses)
-5. Buka terminal/command prompt
-6. Pindah ke folder yang sudah di-extract:
-   - Mac/Linux: `cd ~/Documents/sohibbot`
-   - Windows: `cd %USERPROFILE%\Documents\sohibbot`
+4. Extract ZIP ke folder yang sudah kamu buat tadi
+5. Buka terminal, masuk ke folder hasil extract:
+   ```bash
+   cd sohibbot
+   ```
 
 ---
 
