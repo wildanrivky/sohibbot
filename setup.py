@@ -3,13 +3,39 @@
 SohibBot Setup Wizard — cross-platform (Mac/Linux/Windows).
 Jalankan: python setup.py
 """
-import json
+from __future__ import annotations
+
 import os
+import shutil
+import sys
+
+# ── Bootstrap: auto-switch ke Python 3.11+ kalau versi aktif terlalu lama ──────
+# Harus jalan SEBELUM import lain supaya bisa re-exec dengan aman.
+if sys.version_info < (3, 11):
+    _candidates = ["python3.13", "python3.12", "python3.11"]
+    if sys.platform == "darwin":
+        _candidates += [
+            "/opt/homebrew/opt/python@3.13/bin/python3.13",
+            "/opt/homebrew/opt/python@3.12/bin/python3.12",
+            "/opt/homebrew/opt/python@3.11/bin/python3.11",
+            "/usr/local/opt/python@3.11/bin/python3.11",
+        ]
+    for _c in _candidates:
+        _p = shutil.which(_c) or (_c if os.path.exists(_c) else None)
+        if _p:
+            print(f"  ℹ️  Switching ke {_p} (Python {sys.version_info.major}.{sys.version_info.minor} terlalu lama)...")
+            os.execv(_p, [_p] + sys.argv)
+    # Tidak ada Python 3.11+ ditemukan sama sekali
+    print("\n  ✗ Python 3.11+ dibutuhkan tapi tidak ditemukan di sistem kamu.")
+    print("  Install dulu:\n    Mac:   brew install python@3.11")
+    print("    Linux: sudo apt install python3.11 python3.11-venv")
+    sys.exit(1)
+# ───────────────────────────────────────────────────────────────────────────────
+
+import json
 import platform
 import re
-import shutil
 import subprocess
-import sys
 import time
 import urllib.request
 import webbrowser
