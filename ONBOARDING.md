@@ -5,7 +5,7 @@ Ikuti dari atas ke bawah, jangan skip.
 
 ---
 
-## 1. Apa itu ini?
+## 1. Apa itu Sohib Bot ini?
 
 **Bot ini bukan seperti ChatGPT.**
 
