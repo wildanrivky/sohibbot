@@ -1,0 +1,18 @@
+name: {{ agent.name }}
+archetype: {{ agent.archetype }}
+version: {{ agent.version | default("1.0.0") }}
+role: {{ agent.role_description }}
+tools:
+  allowed:
+    {% for tool in agent.tools %}
+    - {{ tool.name }}
+    {% endfor %}
+memory:
+  always_load:
+    {% for item in agent.memory.always %}
+    - {{ item }}
+    {% endfor %}
+  scopes:
+    {% for scope in agent.memory.scopes %}
+    - {{ scope }}
+    {% endfor %}

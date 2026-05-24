@@ -1,0 +1,33 @@
+# Secrets & state
+.env
+.setup_progress.json
+
+# Memory & data (user-specific)
+memory/**/*
+!memory/**/.gitkeep
+!memory/MEMORY.md
+data/**/*
+!data/**/.gitkeep
+
+# Service files (generated per-user)
+*.plist
+*.service
+windows_task.xml
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+*.egg-info/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Logs
+*.log
