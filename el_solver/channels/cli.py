@@ -8,7 +8,7 @@ Pemakaian:
   el-solver agent news-summarizer run "rangkum sekarang"
   el-solver agents list
   el-solver memory list
-  el-solver memory show projects/tour-bali.md
+  el-solver memory show projects/campaign-ramadhan.md
   el-solver db migrate
   el-solver web                # start web dashboard di 127.0.0.1:8000
   el-solver web --port 8765    # custom port

@@ -212,9 +212,11 @@ python scripts/create_agent.py --type=basic --name=nama-agent
 **Apa itu agent?**
 
 Agent adalah "modul spesialis" untuk task tertentu. Contoh:
-- `web-researcher` — cari & ringkas info dari web
-- `daily-notes` — kelola catatan harian
-- `tour-helper` — bantu urusan tour/perjalanan
+- `web-researcher` — cari & rangkum info dari web
+- `content-creator` — buat konten & caption media sosial
+- `email-writer` — draft email, proposal, & dokumen bisnis
+- `daily-assistant` — catatan harian, to-do, & reminder
+- `customer-reply` — template balas pesan & pertanyaan pelanggan
 
 Bot kamu bisa punya banyak agent sesuai kebutuhan.
 

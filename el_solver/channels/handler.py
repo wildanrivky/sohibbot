@@ -1386,7 +1386,7 @@ async def _create_project_handler(
         return HandlerResponse(
             text=(
                 "Nama project-nya apa?\n"
-                "Contoh: 'buat project konten ramadhan' atau 'bikin project tour jepang'"
+                "Contoh: 'buat project konten ramadhan' atau 'bikin project campaign produk baru'"
             )
         )
 

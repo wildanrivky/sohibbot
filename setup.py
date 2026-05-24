@@ -579,13 +579,14 @@ def step_test(telegram: dict) -> bool:
 # ── Step 7: Agent pertama ──────────────────────────────────────────────────────
 
 AGENT_OPTIONS = [
-    ("instagram-content", "Bikin konten Instagram (carousel, caption)"),
-    ("video-transcriber", "Transkrip & ringkasan video/audio"),
-    ("daily-notes", "Catatan harian otomatis"),
-    ("tour-helper", "Manajemen tour/grup wisata"),
-    ("web-researcher", "Cari & rangkum info dari web"),
-    ("custom", "Custom — deskripsikan sendiri"),
-    ("skip", "Skip — bikin sendiri nanti"),
+    ("web-researcher",  "Cari & rangkum info dari web"),
+    ("content-creator", "Buat konten & caption media sosial"),
+    ("email-writer",    "Draft email, proposal, & dokumen bisnis"),
+    ("meeting-summary", "Rangkum rapat & transkrip audio/video"),
+    ("daily-assistant", "Catatan harian, to-do, & reminder"),
+    ("customer-reply",  "Template balas pesan & pertanyaan pelanggan"),
+    ("custom",          "Custom — deskripsikan sendiri"),
+    ("skip",            "Skip — bikin sendiri nanti"),
 ]
 
 
