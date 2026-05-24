@@ -18,12 +18,40 @@ Bot ini berbeda dari ChatGPT. Dia:
 - Akun [Claude Pro/Max](https://claude.ai) ($20/bulan — sudah include Claude Code CLI)
 - Akun Telegram
 
-**2. Clone dan jalankan wizard:**
-```bash
-git clone https://github.com/wildanrivky/sohibbot.git
-cd sohibbot
-python setup.py
-```
+**2. Buka Terminal, pilih folder, lalu jalankan wizard:**
+
+Pertama, buka Terminal (aplikasi untuk ketik perintah):
+- **Mac** — tekan `Command + Spasi`, ketik `Terminal`, Enter
+- **Windows** — tekan `Windows + R`, ketik `cmd`, Enter
+- **Linux** — tekan `Ctrl + Alt + T`
+
+Kedua, pilih folder tempat SohibBot akan disimpan. Rekomendasi: folder Documents.
+
+- **Mac/Linux** — ketik ini lalu Enter:
+  ```bash
+  cd ~/Documents
+  ```
+- **Windows** — ketik ini lalu Enter:
+  ```cmd
+  cd %USERPROFILE%\Documents
+  ```
+
+Ketiga, jalankan perintah berikut satu per satu (copy-paste, Enter setiap baris):
+
+- **Mac/Linux:**
+  ```bash
+  git clone https://github.com/wildanrivky/sohibbot.git
+  cd sohibbot
+  python3 setup.py
+  ```
+- **Windows:**
+  ```cmd
+  git clone https://github.com/wildanrivky/sohibbot.git
+  cd sohibbot
+  python setup.py
+  ```
+
+> Belum punya Git? Download di [git-scm.com](https://git-scm.com/downloads), install, lalu ulangi langkah di atas. Atau baca cara download tanpa Git di [ONBOARDING.md](ONBOARDING.md#5-step-3--download-sohibbot).
 
 **3. Ikuti pertanyaan wizard** → bot langsung jalan di Telegram.
 
