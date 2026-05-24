@@ -598,7 +598,7 @@ def step_first_agent(identity: dict) -> None:
     for i, (slug, desc) in enumerate(AGENT_OPTIONS, 1):
         print(f"  {i}. {desc}")
 
-    choice_str = ask("\n  Pilihan (1-7)", "7")
+    choice_str = ask(f"\n  Pilihan (1-{len(AGENT_OPTIONS)})", str(len(AGENT_OPTIONS)))
     try:
         idx = int(choice_str) - 1
         if 0 <= idx < len(AGENT_OPTIONS):
@@ -633,13 +633,15 @@ def _create_agent(name: str, description: str, agent_type: str = "basic") -> Non
     agent_dir.mkdir(parents=True, exist_ok=True)
 
     # CLAUDE.md
+    content = f"# {name}\n\n{description}\n\nAgent ini dibuat via setup.py.\n"
     if (template_base / "CLAUDE.md.j2").exists():
-        import jinja2  # noqa: F401 — hanya dipakai jika template tersedia
-        env = jinja2.Environment(loader=jinja2.FileSystemLoader(str(template_base)))
-        tmpl = env.get_template("CLAUDE.md.j2")
-        content = tmpl.render(agent_name=name, description=description)
-    else:
-        content = f"# {name}\n\n{description}\n\nAgent ini dibuat via setup.py.\n"
+        try:
+            import jinja2
+            env = jinja2.Environment(loader=jinja2.FileSystemLoader(str(template_base)))
+            tmpl = env.get_template("CLAUDE.md.j2")
+            content = tmpl.render(agent_name=name, description=description)
+        except ImportError:
+            pass  # jinja2 belum tersedia di Python ini, pakai template sederhana di atas
     (agent_dir / "CLAUDE.md").write_text(content)
 
     # manifest.yaml
