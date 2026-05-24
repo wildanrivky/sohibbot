@@ -22,25 +22,36 @@ Bot ini berbeda dari ChatGPT. Dia:
 
 Pertama, buat folder khusus untuk bot kamu. Beri nama sesuai nama bot yang kamu mau — misalnya `ARIA`, `NOVA`, atau apapun. Jangan langsung taruh di Documents — buat subfolder sendiri supaya rapi dan tidak tercampur file lain.
 
-- **Mac** — buka Finder → Documents → klik kanan → New Folder → beri nama sesuai nama botmu
-- **Windows** — buka File Explorer → `C:\Users\NamaKamu\Documents` → klik kanan → New → Folder → beri nama sesuai nama botmu
-- **Linux** — buka File Manager → Documents → klik kanan → New Folder → beri nama sesuai nama botmu
+**Mac** — buka Finder → Documents → klik kanan → New Folder:
+
+![Mac: klik kanan New Folder](docs/images/mac-new-folder.png)
+
+Beri nama sesuai nama bot kamu, lalu tekan Enter:
+
+![Mac: ketik nama folder](docs/images/mac-rename-folder.png)
+
+**Windows** — buka File Explorer → Documents → klik kanan → New → Folder:
+
+![Windows: klik kanan New Folder](docs/images/windows-new-folder.png)
+
+**Linux** — buka File Manager → Documents → klik kanan → New Folder → beri nama sesuai nama botmu.
+
+---
 
 Kedua, buka Terminal (aplikasi untuk ketik perintah):
 - **Mac** — tekan `Command + Spasi`, ketik `Terminal`, Enter
 - **Windows** — tekan `Windows + R`, ketik `cmd`, Enter
 - **Linux** — tekan `Ctrl + Alt + T`
 
-Ketiga, masuk ke folder yang baru dibuat tadi. Ganti `NamaBot` dengan nama folder yang kamu buat:
+Ketiga, masuk ke folder yang baru dibuat. Ganti `NamaBot` dengan nama folder yang kamu buat. Cara paling mudah: salin path-nya langsung dari Finder/Explorer, lalu paste ke terminal.
 
-- **Mac/Linux:**
-  ```bash
-  cd ~/Documents/NamaBot
-  ```
-- **Windows:**
-  ```cmd
-  cd %USERPROFILE%\Documents\NamaBot
-  ```
+**Mac:**
+
+![Mac: cara cd ke folder](docs/images/mac-terminal-cd.png)
+
+**Windows:**
+
+![Windows: cara cd ke folder](docs/images/windows-terminal-cd.png)
 
 Keempat, jalankan perintah berikut satu per satu (copy-paste, Enter setiap baris):
 
