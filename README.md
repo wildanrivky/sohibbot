@@ -20,23 +20,29 @@ Bot ini berbeda dari ChatGPT. Dia:
 
 **2. Buka Terminal, pilih folder, lalu jalankan wizard:**
 
-Pertama, buka Terminal (aplikasi untuk ketik perintah):
+Pertama, buat folder khusus untuk SohibBot. Jangan langsung taruh di Documents — buat subfolder sendiri supaya rapi dan tidak tercampur file lain.
+
+- **Mac** — buka Finder → Documents → klik kanan → New Folder → beri nama `SohibBot`
+- **Windows** — buka File Explorer → `C:\Users\NamaKamu\Documents` → klik kanan → New → Folder → beri nama `SohibBot`
+- **Linux** — buka File Manager → Documents → klik kanan → New Folder → beri nama `SohibBot`
+
+Kedua, buka Terminal (aplikasi untuk ketik perintah):
 - **Mac** — tekan `Command + Spasi`, ketik `Terminal`, Enter
 - **Windows** — tekan `Windows + R`, ketik `cmd`, Enter
 - **Linux** — tekan `Ctrl + Alt + T`
 
-Kedua, pilih folder tempat SohibBot akan disimpan. Rekomendasi: folder Documents.
+Ketiga, masuk ke folder yang baru dibuat tadi:
 
-- **Mac/Linux** — ketik ini lalu Enter:
+- **Mac/Linux:**
   ```bash
-  cd ~/Documents
+  cd ~/Documents/SohibBot
   ```
-- **Windows** — ketik ini lalu Enter:
+- **Windows:**
   ```cmd
-  cd %USERPROFILE%\Documents
+  cd %USERPROFILE%\Documents\SohibBot
   ```
 
-Ketiga, jalankan perintah berikut satu per satu (copy-paste, Enter setiap baris):
+Keempat, jalankan perintah berikut satu per satu (copy-paste, Enter setiap baris):
 
 - **Mac/Linux:**
   ```bash
