@@ -370,17 +370,34 @@ LOG_LEVEL=INFO
         ok(".venv sudah ada")
 
     # Install dependencies
-    # Catatan: hindari "pip install -e ." karena editable install bisa memicu
-    # setup.py sebagai legacy build script dan menjalankan wizard ini secara rekursif.
-    # Solusi: install langsung pakai "--no-build-isolation" + non-editable,
-    # atau install deps dari pyproject.toml tanpa memanggil setup.py sama sekali.
+    # PENTING: hindari "pip install ." karena setuptools akan memanggil setup.py
+    # sebagai legacy build script → wizard berjalan rekursif → EOFError.
+    # Solusi: baca deps dari pyproject.toml pakai tomllib, install langsung.
     pip = str(VENV_DIR / "bin" / "pip") if OS != "Windows" else str(VENV_DIR / "Scripts" / "pip.exe")
     print("  Menginstall dependencies (ini butuh 1-2 menit)...")
-    # Upgrade pip dulu
     run([pip, "install", "--upgrade", "pip", "--quiet"], check=False)
-    # Install dependencies dari pyproject.toml (non-editable, PEP 517 compliant)
-    run([pip, "install", ".", "--quiet"])
-    ok("Dependencies terinstall")
+
+    import tomllib  # tersedia di Python 3.11+ stdlib
+    pyproject_path = WORKDIR / "pyproject.toml"
+    deps: list[str] = []
+    if pyproject_path.exists():
+        with open(pyproject_path, "rb") as _f:
+            _data = tomllib.load(_f)
+        deps = _data.get("project", {}).get("dependencies", [])
+
+    if deps:
+        run([pip, "install"] + deps + ["--quiet"])
+        ok("Dependencies terinstall")
+    else:
+        err("Tidak ada dependencies di pyproject.toml — skip")
+
+    # Tambah WORKDIR ke venv path supaya 'import el_solver' bisa jalan
+    # tanpa harus pip install . (yang akan trigger setup.py)
+    _site_pkgs_dirs = list((VENV_DIR / "lib").glob("python3.*"))
+    if _site_pkgs_dirs:
+        _pth = _site_pkgs_dirs[0] / "site-packages" / "sohibbot-local.pth"
+        _pth.write_text(str(WORKDIR) + "\n")
+        ok("Local package (el_solver) dikonfigurasi di venv")
 
 
 # ── Step 5: Auto-restart service ───────────────────────────────────────────────
