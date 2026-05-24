@@ -370,9 +370,16 @@ LOG_LEVEL=INFO
         ok(".venv sudah ada")
 
     # Install dependencies
+    # Catatan: hindari "pip install -e ." karena editable install bisa memicu
+    # setup.py sebagai legacy build script dan menjalankan wizard ini secara rekursif.
+    # Solusi: install langsung pakai "--no-build-isolation" + non-editable,
+    # atau install deps dari pyproject.toml tanpa memanggil setup.py sama sekali.
     pip = str(VENV_DIR / "bin" / "pip") if OS != "Windows" else str(VENV_DIR / "Scripts" / "pip.exe")
     print("  Menginstall dependencies (ini butuh 1-2 menit)...")
-    run([pip, "install", "-e", ".", "--quiet"])
+    # Upgrade pip dulu
+    run([pip, "install", "--upgrade", "pip", "--quiet"], check=False)
+    # Install dependencies dari pyproject.toml (non-editable, PEP 517 compliant)
+    run([pip, "install", ".", "--quiet"])
     ok("Dependencies terinstall")
 
 
