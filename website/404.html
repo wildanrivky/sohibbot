@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Halaman Tidak Ditemukan | IKASI Polban</title>
+  <meta name="robots" content="noindex, follow" />
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Lato:wght@400;700;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --gold: #F5C000;
+      --black: #0D0D0D;
+      --white: #FFFFFF;
+      --white-dim: rgba(255,255,255,0.6);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'Lato', Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 32px;
+    }
+    .num {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(6rem, 20vw, 12rem);
+      font-weight: 900;
+      color: var(--gold);
+      line-height: 1;
+      opacity: 0.15;
+      user-select: none;
+    }
+    .title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(1.5rem, 4vw, 2.5rem);
+      font-weight: 700;
+      margin-top: -32px;
+      margin-bottom: 16px;
+    }
+    .desc {
+      color: var(--white-dim);
+      font-size: 1rem;
+      line-height: 1.7;
+      max-width: 480px;
+      margin-bottom: 48px;
+    }
+    .links {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .btn-gold {
+      background: var(--gold);
+      color: var(--black);
+      font-weight: 900;
+      font-size: 0.78rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 14px 28px;
+      border-radius: 2px;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .btn-gold:hover { background: #FFD740; }
+    .btn-outline {
+      background: transparent;
+      color: var(--white-dim);
+      font-weight: 700;
+      font-size: 0.78rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 14px 28px;
+      border-radius: 2px;
+      border: 1px solid rgba(255,255,255,0.2);
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+    .divider {
+      width: 48px; height: 1px;
+      background: rgba(245,192,0,0.3);
+      margin: 48px auto;
+    }
+    .quick-links {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .quick-links a {
+      color: var(--white-dim);
+      font-size: 0.85rem;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .quick-links a:hover { color: var(--gold); }
+  </style>
+  <!-- Google Analytics 4 — ganti G-XXXXXXXXXX dengan Measurement ID dari analytics.google.com -->
+  <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script> -->
+
+  <!-- Microsoft Clarity — ganti CLARITY_PROJECT_ID dengan ID dari clarity.microsoft.com -->
+  <!-- <script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+      c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+      t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+      y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "CLARITY_PROJECT_ID");
+  </script> -->
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+</head>
+<body>
+  <div class="num">404</div>
+  <h1 class="title">Halaman Tidak Ditemukan</h1>
+  <p class="desc">
+    Sepertinya halaman yang kamu cari sudah dipindahkan atau tidak pernah ada.<br />
+    Tidak perlu khawatir — masih banyak yang bisa kamu jelajahi di IKASI.
+  </p>
+  <div class="links">
+    <a href="/" class="btn-gold">← Kembali ke Beranda</a>
+    <a href="/alumni.html" class="btn-outline">Direktori Alumni</a>
+  </div>
+  <div class="divider"></div>
+  <div class="quick-links">
+    <a href="/alumni.html">Alumni</a>
+    <a href="/bisnis.html">Bisnis</a>
+    <a href="/angkatan.html">Per Angkatan</a>
+    <a href="/news.html">Berita</a>
+    <a href="/pengurus.html">Pengurus</a>
+  </div>
+
+  <!-- WhatsApp Floating Button -->
+  <a href="https://wa.me/6281234681730?text=Halo%20IKASI%2C%20saya%20butuh%20bantuan."
+     target="_blank" rel="noopener noreferrer"
+     title="Chat WhatsApp IKASI"
+     style="position:fixed;bottom:24px;right:24px;z-index:850;width:52px;height:52px;border-radius:50%;background:#25D366;color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(37,211,102,0.4);text-decoration:none;"
+     onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.523 5.85L.057 23.817a.75.75 0 00.921.921l5.967-1.466A11.938 11.938 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.953 0-3.78-.527-5.348-1.445l-.383-.229-3.972.976.996-3.876-.25-.396A9.956 9.956 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
+    </svg>
+  </a>
+
+  <!-- Cookie Consent Banner -->
+  <div id="cookie-banner" style="position:fixed;bottom:0;left:0;right:0;background:rgba(13,13,13,0.97);border-top:1px solid rgba(245,192,0,0.2);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);z-index:999;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
+    <p style="font-size:0.82rem;color:rgba(255,255,255,0.65);margin:0;max-width:700px;line-height:1.6;">
+      🍪 Kami menggunakan cookie untuk analitik dan meningkatkan pengalaman Anda. <a href="/privacy.html" style="color:#F5C000;text-decoration:underline;">Kebijakan Privasi</a>
+    </p>
+    <div style="display:flex;gap:8px;flex-shrink:0;flex-wrap:wrap;">
+      <button onclick="document.getElementById('cookie-banner').style.display='none';localStorage.setItem('cookie-ok','all');" style="background:#F5C000;color:#0D0D0D;font-size:0.78rem;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;padding:10px 20px;border:none;cursor:pointer;border-radius:2px;">Setuju</button>
+      <button onclick="document.getElementById('cookie-banner').style.display='none';localStorage.setItem('cookie-ok','essential');" style="background:transparent;color:rgba(255,255,255,0.65);font-size:0.78rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:10px 16px;border:1px solid rgba(255,255,255,0.2);cursor:pointer;border-radius:2px;">Esensial saja</button>
+    </div>
+  </div>
+  <script>if(localStorage.getItem('cookie-ok'))document.getElementById('cookie-banner').style.display='none';</script>
+</body>
+</html>

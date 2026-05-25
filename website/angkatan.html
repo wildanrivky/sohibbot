@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Alumni Per Angkatan | IKASI Polban — 1982 hingga 2023</title>
+  <meta name="description" content="Jelajahi alumni IKASI per angkatan dari 1982–2023. 41 angkatan, 1.451 alumni terdaftar. Cari teman angkatan Anda." />
+  <script src="/supabase.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold: #C9A84C;
+      --gold-light: #E8C97A;
+      --gold-dim: #8a6f2e;
+      --bg: #0f0f0f;
+      --bg2: #1a1a1a;
+      --bg3: #242424;
+      --border: #2e2e2e;
+      --text: #e8e8e8;
+      --text-dim: #888;
+      --text-muted: #555;
+      --green: #4ade80;
+      --blue: #60a5fa;
+      --purple: #a78bfa;
+      --orange: #fb923c;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      min-height: 100vh;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+      padding: 0 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      height: 56px;
+    }
+    .nav-logo {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--gold);
+      text-decoration: none;
+      margin-right: auto;
+    }
+    .nav-links { display: flex; gap: 0.25rem; }
+    .nav-links a {
+      color: var(--text-dim);
+      text-decoration: none;
+      padding: 0.4rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      transition: all 0.15s;
+    }
+    .nav-links a:hover, .nav-links a.active { color: var(--gold); background: rgba(201,168,76,0.1); }
+    .hamburger { display: none; background: none; border: none; color: var(--text); cursor: pointer; padding: 0.5rem; }
+    .mobile-menu { display: none; }
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .hamburger { display: block; }
+      .mobile-menu {
+        position: fixed; top: 56px; left: 0; right: 0; bottom: 0;
+        background: var(--bg2); z-index: 99; padding: 1rem;
+        flex-direction: column; gap: 0.5rem;
+        border-top: 1px solid var(--border);
+      }
+      .mobile-menu.open { display: flex; }
+      .mobile-menu a {
+        color: var(--text); text-decoration: none;
+        padding: 0.75rem 1rem; border-radius: 8px;
+        font-size: 1rem; transition: all 0.15s;
+      }
+      .mobile-menu a:hover, .mobile-menu a.active { color: var(--gold); background: rgba(201,168,76,0.1); }
+    }
+
+    /* ─── HEADER ─── */
+    .page-header {
+      background: linear-gradient(135deg, var(--bg2) 0%, #1c1408 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 2rem 1.5rem;
+      text-align: center;
+    }
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 0.875rem;
+      margin-bottom: 1rem;
+      transition: color 0.15s;
+    }
+    .back-btn:hover { color: var(--gold); }
+    .page-header h1 {
+      font-size: clamp(1.5rem, 4vw, 2rem);
+      font-weight: 700;
+      color: var(--gold-light);
+      margin-bottom: 0.5rem;
+    }
+    .page-header p {
+      color: var(--text-dim);
+      font-size: 0.95rem;
+    }
+    .header-stats {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 1.25rem;
+      flex-wrap: wrap;
+    }
+    .hstat { text-align: center; }
+    .hstat-num { font-size: 1.4rem; font-weight: 700; color: var(--gold); }
+    .hstat-lbl { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.1rem; }
+
+    /* ─── MAIN ─── */
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+    }
+
+    /* ─── DECADE GROUP ─── */
+    .decade-group { margin-bottom: 2.5rem; }
+    .decade-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .angkatan-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 0.75rem;
+    }
+
+    /* ─── ANGKATAN CARD ─── */
+    .angkatan-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem 1rem;
+      cursor: pointer;
+      transition: all 0.15s;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .angkatan-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--decade-color, var(--gold));
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+    .angkatan-card:hover {
+      border-color: var(--gold-dim);
+      background: var(--bg3);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+    }
+    .angkatan-card:hover::before { opacity: 1; }
+    .angkatan-year {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--gold-light);
+      letter-spacing: -0.02em;
+    }
+    .angkatan-count {
+      font-size: 0.875rem;
+      color: var(--text-dim);
+      margin-top: 0.25rem;
+    }
+    .angkatan-count strong { color: var(--text); }
+    .angkatan-bar-wrap {
+      margin-top: 0.75rem;
+      background: var(--bg3);
+      border-radius: 99px;
+      height: 4px;
+      overflow: hidden;
+    }
+    .angkatan-bar {
+      height: 100%;
+      border-radius: 99px;
+      background: var(--decade-color, var(--gold));
+      transition: width 0.4s ease;
+    }
+    .angkatan-arrow {
+      position: absolute;
+      bottom: 0.6rem;
+      right: 0.75rem;
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+    .angkatan-card:hover .angkatan-arrow { opacity: 1; }
+
+    /* ─── DETAIL VIEW ─── */
+    #detail-view { display: none; }
+    .detail-header {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .detail-year-badge {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--gold);
+      min-width: 80px;
+      text-align: center;
+      line-height: 1;
+    }
+    .detail-year-badge small {
+      display: block;
+      font-size: 0.7rem;
+      font-weight: 400;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-top: 0.2rem;
+    }
+    .detail-stats {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .dstat { }
+    .dstat-num { font-size: 1.25rem; font-weight: 700; color: var(--text); }
+    .dstat-lbl { font-size: 0.75rem; color: var(--text-muted); }
+
+    /* ─── FILTERS ─── */
+    .filters-row {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+    }
+    .search-wrap {
+      flex: 1;
+      min-width: 200px;
+      position: relative;
+    }
+    .search-wrap input {
+      width: 100%;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.6rem 0.75rem 0.6rem 2.25rem;
+      color: var(--text);
+      font-size: 0.875rem;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .search-wrap input:focus { border-color: var(--gold-dim); }
+    .search-icon {
+      position: absolute;
+      left: 0.6rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      pointer-events: none;
+    }
+    .filter-select {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.6rem 0.75rem;
+      color: var(--text);
+      font-size: 0.875rem;
+      outline: none;
+      cursor: pointer;
+      min-width: 150px;
+    }
+    .filter-select:focus { border-color: var(--gold-dim); }
+
+    /* ─── ALUMNI LIST ─── */
+    #alumni-list-detail {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 0.75rem;
+    }
+    .alumni-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem;
+      display: flex;
+      gap: 0.875rem;
+      cursor: pointer;
+      transition: all 0.15s;
+      align-items: flex-start;
+    }
+    .alumni-card:hover { border-color: var(--gold-dim); background: var(--bg3); }
+    .avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1rem;
+      flex-shrink: 0;
+      color: #0f0f0f;
+    }
+    .card-info { flex: 1; min-width: 0; }
+    .card-name {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .card-profesi {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      margin-top: 0.2rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .card-meta {
+      display: flex;
+      gap: 0.4rem;
+      margin-top: 0.4rem;
+      flex-wrap: wrap;
+    }
+    .badge {
+      font-size: 0.7rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 99px;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+    }
+    .badge.gold { border-color: var(--gold-dim); color: var(--gold); }
+
+    /* ─── PAGINATION ─── */
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .page-btn {
+      min-width: 36px;
+      height: 36px;
+      border: 1px solid var(--border);
+      background: var(--bg2);
+      color: var(--text-dim);
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 0.5rem;
+    }
+    .page-btn:hover { border-color: var(--gold-dim); color: var(--gold); }
+    .page-btn.active { background: var(--gold); border-color: var(--gold); color: #0f0f0f; font-weight: 700; }
+    .page-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+    .page-info { font-size: 0.8rem; color: var(--text-muted); margin: 0 0.5rem; }
+
+    /* ─── MODAL ─── */
+    .modal-overlay {
+      position: fixed; inset: 0; z-index: 200;
+      background: rgba(0,0,0,0.7);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      width: 100%;
+      max-width: 480px;
+      max-height: 85vh;
+      overflow-y: auto;
+      padding: 1.5rem;
+      position: relative;
+    }
+    .modal-close {
+      position: absolute; top: 1rem; right: 1rem;
+      background: none; border: none; color: var(--text-dim);
+      cursor: pointer; font-size: 1.25rem; line-height: 1;
+    }
+    .modal-close:hover { color: var(--text); }
+    .modal-avatar {
+      width: 64px; height: 64px; border-radius: 50%;
+      font-size: 1.5rem; font-weight: 700; color: #0f0f0f;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 1rem;
+    }
+    .modal-name {
+      font-size: 1.2rem; font-weight: 700; text-align: center;
+      color: var(--gold-light); margin-bottom: 0.25rem;
+    }
+    .modal-sub { text-align: center; color: var(--text-dim); font-size: 0.875rem; margin-bottom: 1.25rem; }
+    .modal-section { margin-bottom: 1rem; }
+    .modal-section-title {
+      font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
+    .modal-row {
+      display: flex; gap: 0.75rem; margin-bottom: 0.5rem;
+      align-items: flex-start;
+    }
+    .modal-row-label { font-size: 0.8rem; color: var(--text-muted); min-width: 90px; flex-shrink: 0; }
+    .modal-row-value { font-size: 0.875rem; color: var(--text); word-break: break-word; }
+    .lock-notice {
+      background: rgba(201,168,76,0.08);
+      border: 1px solid rgba(201,168,76,0.2);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      font-size: 0.8rem;
+      color: var(--gold-dim);
+      text-align: center;
+    }
+
+    /* ─── EMPTY / LOADING ─── */
+    .empty {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--text-muted);
+    }
+    .empty-icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
+    .empty-msg { font-size: 0.9rem; }
+    .loading-wrap {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 3rem;
+      gap: 0.75rem;
+      color: var(--text-muted);
+    }
+    .spinner {
+      width: 20px; height: 20px;
+      border: 2px solid var(--border);
+      border-top-color: var(--gold);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ─── RESULT COUNT ─── */
+    .result-count {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+    .result-count strong { color: var(--text); }
+  </style>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://ikasipolban.com/angkatan.html" />
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://ikasipolban.com/angkatan.html" />
+  <meta property="og:title" content="41 Angkatan Alumni Teknik Sipil Polban (1982–2023) | IKASI" />
+  <meta property="og:description" content="Jelajahi alumni IKASI per angkatan dari 1982–2023. 41 angkatan, 1.451 alumni terdaftar. Cari teman angkatan Anda." />
+  <meta property="og:image" content="https://ikasipolban.com/og-image.png" />
+  <meta property="og:locale" content="id_ID" />
+  <meta property="og:site_name" content="IKASI Polban" />
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="41 Angkatan Alumni Teknik Sipil Polban (1982–2023) | IKASI" />
+  <meta name="twitter:description" content="Jelajahi alumni IKASI per angkatan dari 1982–2023. 41 angkatan, 1.451 alumni terdaftar. Cari teman angkatan Anda." />
+  <meta name="twitter:image" content="https://ikasipolban.com/og-image.png" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Beranda",
+        "item": "https://ikasipolban.com/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Per Angkatan",
+        "item": "https://ikasipolban.com/angkatan.html"
+      }
+    ]
+  }
+  </script>
+  <!-- Google Analytics 4 — ganti G-XXXXXXXXXX dengan Measurement ID dari analytics.google.com -->
+  <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script> -->
+
+  <!-- Microsoft Clarity — ganti CLARITY_PROJECT_ID dengan ID dari clarity.microsoft.com -->
+  <!-- <script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+      c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+      t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+      y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "CLARITY_PROJECT_ID");
+  </script> -->
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a class="nav-logo" href="index.html">IKASI Polban</a>
+    <div class="nav-links">
+      <a href="index.html">Beranda</a>
+      <a href="alumni.html">Direktori Alumni</a>
+      <a href="bisnis.html">Bisnis Alumni</a>
+      <a href="angkatan.html" class="active">Per Angkatan</a>
+      <a href="event.html">Acara</a>
+      <a href="news.html">Berita</a>
+      <a href="pengurus.html">Pengurus</a>
+      <a href="index.html#kontak" style="background:var(--gold);color:#0f0f0f;padding:0.4rem 1rem;border-radius:4px;font-weight:700;font-size:0.82rem;">Bergabung →</a>
+    </div>
+    <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">☰</button>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html">Beranda</a>
+  <a href="alumni.html">Direktori Alumni</a>
+  <a href="bisnis.html">Bisnis Alumni</a>
+  <a href="angkatan.html" class="active">Per Angkatan</a>
+  <a href="event.html">Acara</a>
+  <a href="news.html">Berita</a>
+  <a href="pengurus.html">Pengurus</a>
+  <a href="index.html#kontak" style="background:var(--gold);color:#0f0f0f;padding:0.75rem 1rem;border-radius:8px;font-weight:700;">Bergabung Sekarang →</a>
+</div>
+
+<!-- LIST VIEW -->
+<div id="list-view">
+  <div class="page-header">
+    <h1>Per Angkatan</h1>
+    <p>Data alumni IKASI berdasarkan tahun masuk, dari angkatan 1982 hingga sekarang</p>
+    <div class="header-stats">
+      <div class="hstat">
+        <div class="hstat-num" id="stat-angkatan">–</div>
+        <div class="hstat-lbl">Angkatan</div>
+      </div>
+      <div class="hstat">
+        <div class="hstat-num" id="stat-total">–</div>
+        <div class="hstat-lbl">Total Responden</div>
+      </div>
+      <div class="hstat">
+        <div class="hstat-num" id="stat-terbesar">–</div>
+        <div class="hstat-lbl">Angkatan Terbesar</div>
+      </div>
+    </div>
+  </div>
+
+  <main id="angkatan-content">
+    <div class="loading-wrap"><div class="spinner"></div> Memuat data...</div>
+  </main>
+</div>
+
+<!-- DETAIL VIEW -->
+<div id="detail-view">
+  <div class="page-header">
+    <a class="back-btn" href="angkatan.html" id="back-link">← Semua Angkatan</a>
+    <h1 id="detail-title">Angkatan –</h1>
+    <p id="detail-subtitle">Alumni Teknik Sipil Polban</p>
+    <div class="header-stats" id="detail-stats-header"></div>
+  </div>
+
+  <main>
+    <div class="detail-header" id="detail-meta-card" style="display:none">
+      <div class="detail-year-badge" id="detail-year-badge">–<small>Angkatan</small></div>
+      <div class="detail-stats" id="detail-stats"></div>
+    </div>
+
+    <div class="filters-row">
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="search-detail" placeholder="Cari nama alumni..." autocomplete="off" />
+      </div>
+      <select class="filter-select" id="filter-prodi-detail">
+        <option value="">Semua Prodi</option>
+      </select>
+      <select class="filter-select" id="filter-bidang-detail">
+        <option value="">Semua Bidang</option>
+      </select>
+    </div>
+
+    <div class="result-count" id="result-count-detail"></div>
+    <div id="alumni-list-detail"></div>
+    <div class="pagination" id="pagination-detail"></div>
+  </main>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal" id="modal-content">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://wsoqlinhastagyhanfmt.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indzb3FsaW5oYXN0YWd5aGFuZm10Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk2MTkwNzQsImV4cCI6MjA5NTE5NTA3NH0.Y6iw8t0yQZyJY6zqWk7MQ5EKzcnSeMkygNAQD6Q3ggk';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const DECADE_COLORS = {
+  1980: '#60a5fa',  // blue
+  1990: '#34d399',  // green
+  2000: '#f59e0b',  // amber
+  2010: '#C9A84C',  // gold
+  2020: '#a78bfa',  // purple
+};
+
+const AVATAR_COLORS = [
+  '#e8665a','#f5a623','#7ed321','#4a90d9','#9b59b6',
+  '#1abc9c','#e74c3c','#3498db','#2ecc71','#e67e22',
+];
+
+function getDecade(year) {
+  return Math.floor(year / 10) * 10;
+}
+
+function getDecadeColor(year) {
+  return DECADE_COLORS[getDecade(year)] || '#C9A84C';
+}
+
+function avatarColor(name) {
+  let h = 0;
+  for (const c of name) h = ((h << 5) - h) + c.charCodeAt(0);
+  return AVATAR_COLORS[Math.abs(h) % AVATAR_COLORS.length];
+}
+
+function initials(name) {
+  return name.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
+}
+
+function formatNum(n) {
+  return n?.toLocaleString('id') ?? '–';
+}
+
+// ─── ROUTING ───
+function getQueryParam(key) {
+  return new URLSearchParams(window.location.search).get(key);
+}
+
+const tahunParam = getQueryParam('tahun');
+
+if (tahunParam) {
+  document.getElementById('list-view').style.display = 'none';
+  document.getElementById('detail-view').style.display = 'block';
+  initDetailView(parseInt(tahunParam));
+} else {
+  initListView();
+}
+
+// ─── LIST VIEW ───
+async function initListView() {
+  let data = null;
+  try { const res = await sb.rpc('get_angkatan_stats'); data = res.data; } catch(e) {}
+
+  // Fallback: query langsung dari tabel alumni
+  const { data: rows } = await sb
+    .from('alumni')
+    .select('angkatan')
+    .gte('angkatan', 1982)
+    .lte('angkatan', 2030);
+
+  if (!rows) {
+    document.getElementById('angkatan-content').innerHTML =
+      '<div class="empty"><div class="empty-icon">⚠️</div><div class="empty-msg">Gagal memuat data</div></div>';
+    return;
+  }
+
+  // Hitung per angkatan
+  const counts = {};
+  for (const r of rows) {
+    counts[r.angkatan] = (counts[r.angkatan] || 0) + 1;
+  }
+
+  const angkatanList = Object.entries(counts)
+    .map(([y, c]) => ({ year: parseInt(y), count: c }))
+    .sort((a, b) => a.year - b.year);
+
+  const maxCount = Math.max(...angkatanList.map(a => a.count));
+  const totalAlumni = angkatanList.reduce((s, a) => s + a.count, 0);
+  const biggest = angkatanList.reduce((m, a) => a.count > m.count ? a : m);
+
+  // Update header stats
+  document.getElementById('stat-angkatan').textContent = angkatanList.length;
+  document.getElementById('stat-total').textContent = formatNum(totalAlumni);
+  document.getElementById('stat-terbesar').textContent = biggest.year;
+
+  // Group by decade
+  const byDecade = {};
+  for (const a of angkatanList) {
+    const dec = getDecade(a.year);
+    if (!byDecade[dec]) byDecade[dec] = [];
+    byDecade[dec].push(a);
+  }
+
+  let html = '';
+  for (const [dec, items] of Object.entries(byDecade).sort()) {
+    const decadeColor = DECADE_COLORS[parseInt(dec)] || '#C9A84C';
+    html += `<div class="decade-group">
+      <div class="decade-label" style="color:${decadeColor}">Dekade ${dec}an</div>
+      <div class="angkatan-grid">`;
+    for (const a of items) {
+      const pct = Math.round((a.count / maxCount) * 100);
+      html += `<div class="angkatan-card" style="--decade-color:${decadeColor}" onclick="goToAngkatan(${a.year})">
+        <div class="angkatan-year">${a.year}</div>
+        <div class="angkatan-count"><strong>${formatNum(a.count)}</strong> alumni</div>
+        <div class="angkatan-bar-wrap">
+          <div class="angkatan-bar" style="width:${pct}%; background:${decadeColor}"></div>
+        </div>
+        <span class="angkatan-arrow">→</span>
+      </div>`;
+    }
+    html += `</div></div>`;
+  }
+
+  document.getElementById('angkatan-content').innerHTML = html;
+}
+
+function goToAngkatan(year) {
+  window.location.href = `angkatan.html?tahun=${year}`;
+}
+
+// ─── DETAIL VIEW ───
+let detailData = [];
+let detailFiltered = [];
+let detailPage = 1;
+const DETAIL_PER_PAGE = 48;
+let detailSearchTimer;
+
+async function initDetailView(tahun) {
+  document.getElementById('detail-title').textContent = `Angkatan ${tahun}`;
+  document.getElementById('detail-year-badge').innerHTML = `${tahun}<small>Angkatan</small>`;
+
+  // Fetch semua alumni angkatan ini
+  const { data, error } = await sb
+    .from('alumni')
+    .select('*')
+    .eq('angkatan', tahun)
+    .order('nama');
+
+  if (error || !data) {
+    document.getElementById('alumni-list-detail').innerHTML =
+      '<div class="empty"><div class="empty-icon">⚠️</div><div class="empty-msg">Gagal memuat data angkatan ini</div></div>';
+    return;
+  }
+
+  detailData = data;
+
+  // Stats
+  const prodiSet = new Set(data.filter(a => a.prodi).map(a => a.prodi));
+  const bidangSet = new Set(data.filter(a => a.bidang_pekerjaan).map(a => a.bidang_pekerjaan));
+  const domisiSet = new Set(data.filter(a => a.domisili).map(a => a.domisili));
+
+  document.getElementById('detail-subtitle').textContent =
+    `${data.length} alumni terdaftar · ${prodiSet.size} program studi · ${domisiSet.size} kota`;
+
+  document.getElementById('detail-stats-header').innerHTML = `
+    <div class="hstat"><div class="hstat-num">${data.length}</div><div class="hstat-lbl">Alumni Terdaftar</div></div>
+    <div class="hstat"><div class="hstat-num">${prodiSet.size}</div><div class="hstat-lbl">Program Studi</div></div>
+    <div class="hstat"><div class="hstat-num">${bidangSet.size}</div><div class="hstat-lbl">Bidang Kerja</div></div>
+    <div class="hstat"><div class="hstat-num">${domisiSet.size}</div><div class="hstat-lbl">Kota Domisili</div></div>
+  `;
+
+  // Populate filter dropdowns
+  const prodiSel = document.getElementById('filter-prodi-detail');
+  [...prodiSet].sort().forEach(p => {
+    prodiSel.innerHTML += `<option value="${esc(p)}">${esc(p)}</option>`;
+  });
+  const bidangSel = document.getElementById('filter-bidang-detail');
+  [...bidangSet].sort().forEach(b => {
+    bidangSel.innerHTML += `<option value="${esc(b)}">${esc(b)}</option>`;
+  });
+
+  // Events
+  document.getElementById('search-detail').addEventListener('input', e => {
+    clearTimeout(detailSearchTimer);
+    detailSearchTimer = setTimeout(applyDetailFilters, 300);
+  });
+  document.getElementById('filter-prodi-detail').addEventListener('change', applyDetailFilters);
+  document.getElementById('filter-bidang-detail').addEventListener('change', applyDetailFilters);
+
+  applyDetailFilters();
+}
+
+function applyDetailFilters() {
+  const q = document.getElementById('search-detail').value.toLowerCase().trim();
+  const prodi = document.getElementById('filter-prodi-detail').value;
+  const bidang = document.getElementById('filter-bidang-detail').value;
+
+  detailFiltered = detailData.filter(a => {
+    if (q && !a.nama?.toLowerCase().includes(q) && !a.tempat_kerja?.toLowerCase().includes(q)) return false;
+    if (prodi && a.prodi !== prodi) return false;
+    if (bidang && a.bidang_pekerjaan !== bidang) return false;
+    return true;
+  });
+
+  detailPage = 1;
+  renderDetailList();
+}
+
+function renderDetailList() {
+  const total = detailFiltered.length;
+  const totalPages = Math.ceil(total / DETAIL_PER_PAGE);
+  const start = (detailPage - 1) * DETAIL_PER_PAGE;
+  const slice = detailFiltered.slice(start, start + DETAIL_PER_PAGE);
+
+  document.getElementById('result-count-detail').innerHTML =
+    `Menampilkan <strong>${slice.length}</strong> dari <strong>${total}</strong> alumni`;
+
+  if (slice.length === 0) {
+    document.getElementById('alumni-list-detail').innerHTML =
+      '<div class="empty"><div class="empty-icon">🔍</div><div class="empty-msg">Tidak ada alumni yang cocok</div></div>';
+    document.getElementById('pagination-detail').innerHTML = '';
+    return;
+  }
+
+  document.getElementById('alumni-list-detail').innerHTML = slice.map(a => `
+    <div class="alumni-card" onclick="openModal(${JSON.stringify(JSON.stringify(a))})">
+      <div class="avatar" style="background:${avatarColor(a.nama || '?')}">${initials(a.nama || '?')}</div>
+      <div class="card-info">
+        <div class="card-name">${esc(a.nama)}</div>
+        <div class="card-profesi">${a.jabatan && a.tempat_kerja ? esc(a.jabatan)+' · '+esc(a.tempat_kerja) : esc(a.bidang_pekerjaan || 'Profesi tidak diisi')}</div>
+        <div class="card-meta">
+          ${a.prodi ? `<span class="badge gold">${esc(a.prodi)}</span>` : ''}
+          ${a.domisili ? `<span class="badge">${esc(a.domisili)}</span>` : ''}
+        </div>
+      </div>
+    </div>
+  `).join('');
+
+  // Pagination
+  renderPaginationDetail(totalPages);
+}
+
+function renderPaginationDetail(totalPages) {
+  if (totalPages <= 1) { document.getElementById('pagination-detail').innerHTML = ''; return; }
+  let html = `<button class="page-btn" onclick="changeDetailPage(${detailPage-1})" ${detailPage===1?'disabled':''}>‹</button>`;
+
+  const pages = [];
+  pages.push(1);
+  if (detailPage > 3) pages.push('...');
+  for (let p = Math.max(2, detailPage-1); p <= Math.min(totalPages-1, detailPage+1); p++) pages.push(p);
+  if (detailPage < totalPages - 2) pages.push('...');
+  if (totalPages > 1) pages.push(totalPages);
+
+  for (const p of pages) {
+    if (p === '...') html += `<span class="page-info">…</span>`;
+    else html += `<button class="page-btn ${p===detailPage?'active':''}" onclick="changeDetailPage(${p})">${p}</button>`;
+  }
+
+  html += `<button class="page-btn" onclick="changeDetailPage(${detailPage+1})" ${detailPage===totalPages?'disabled':''}>›</button>`;
+  document.getElementById('pagination-detail').innerHTML = html;
+}
+
+function changeDetailPage(p) {
+  detailPage = p;
+  renderDetailList();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ─── MODAL ───
+function openModal(jsonStr) {
+  const a = JSON.parse(jsonStr);
+  const color = avatarColor(a.nama || '?');
+
+  const rows = [
+    { label: 'Angkatan', val: a.angkatan },
+    { label: 'Program Studi', val: a.prodi },
+    { label: 'Bidang Kerja', val: a.bidang_pekerjaan },
+    { label: 'Jabatan', val: a.jabatan },
+    { label: 'Tempat Kerja', val: a.tempat_kerja },
+    { label: 'Domisili', val: a.domisili },
+    { label: 'Pendidikan', val: a.pendidikan_terakhir },
+    { label: 'Institusi', val: a.institusi },
+    { label: 'Tahun Lulus', val: a.tahun_lulus },
+    { label: 'Punya SKA', val: a.punya_ska ? 'Ya' + (a.bidang_ska ? ` (${a.bidang_ska})` : '') : null },
+    { label: 'Minat/Hobi', val: a.minat_hobi?.length ? a.minat_hobi.join(', ') : null },
+    { label: 'Bersedia KP', val: a.bersedia_kp ? 'Ya, bersedia membimbing KP' : null },
+    { label: 'Dosen Tamu', val: a.bersedia_dosen_tamu || null },
+  ].filter(r => r.val != null && r.val !== '' && r.val !== false);
+
+  document.getElementById('modal-body').innerHTML = `
+    <div class="modal-avatar" style="background:${color}">${initials(a.nama || '?')}</div>
+    <div class="modal-name">${esc(a.nama)}</div>
+    <div class="modal-sub">Angkatan ${a.angkatan}${a.prodi ? ' · ' + esc(a.prodi) : ''}</div>
+    <div class="modal-section">
+      ${rows.map(r => `
+        <div class="modal-row">
+          <span class="modal-row-label">${r.label}</span>
+          <span class="modal-row-value">${esc(String(r.val))}</span>
+        </div>
+      `).join('')}
+    </div>
+    <div class="lock-notice">
+      🔒 Kontak (email & nomor HP) hanya tersedia untuk sesama alumni yang login.<br>
+      <em>Fitur login segera hadir.</em>
+    </div>
+  `;
+
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(e) {
+  if (e && e.target !== document.getElementById('modal-overlay')) return;
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// ESC key
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    document.getElementById('modal-overlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+});
+
+// ─── MOBILE MENU ───
+function toggleMenu() {
+  document.getElementById('mobileMenu').classList.toggle('open');
+}
+
+// ─── ESCAPE HTML ───
+function esc(str) {
+  if (!str && str !== 0) return '–';
+  return String(str)
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;');
+}
+</script>
+
+  <!-- WhatsApp Floating Button -->
+  <a href="https://wa.me/6281234681730?text=Halo%20IKASI%2C%20saya%20ingin%20bertanya%20atau%20bergabung." 
+     target="_blank" rel="noopener noreferrer"
+     title="Chat WhatsApp IKASI"
+     style="position:fixed;bottom:24px;right:24px;z-index:850;width:52px;height:52px;border-radius:50%;background:#25D366;color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(37,211,102,0.4);transition:transform 0.25s,box-shadow 0.25s;text-decoration:none;"
+     onmouseover="this.style.transform='scale(1.1)';this.style.boxShadow='0 6px 28px rgba(37,211,102,0.55)'"
+     onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 4px 20px rgba(37,211,102,0.4)'">
+    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.523 5.85L.057 23.817a.75.75 0 00.921.921l5.967-1.466A11.938 11.938 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.953 0-3.78-.527-5.348-1.445l-.383-.229-3.972.976.996-3.876-.25-.396A9.956 9.956 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
+    </svg>
+  </a>
+
+  <!-- Cookie Consent Banner -->
+  <div id="cookie-banner" style="position:fixed;bottom:0;left:0;right:0;background:rgba(13,13,13,0.97);border-top:1px solid rgba(245,192,0,0.2);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);z-index:999;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
+    <p style="font-size:0.82rem;color:rgba(255,255,255,0.65);margin:0;max-width:700px;line-height:1.6;">
+      🍪 Kami menggunakan cookie untuk analitik pengunjung. <a href="/privacy.html" style="color:#F5C000;text-decoration:underline;">Kebijakan Privasi</a>
+    </p>
+    <div style="display:flex;gap:8px;flex-shrink:0;flex-wrap:wrap;">
+      <button onclick="document.getElementById('cookie-banner').style.display='none';localStorage.setItem('cookie-ok','all');" style="background:#F5C000;color:#0D0D0D;font-size:0.78rem;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;padding:10px 20px;border:none;cursor:pointer;border-radius:2px;">Setuju</button>
+      <button onclick="document.getElementById('cookie-banner').style.display='none';localStorage.setItem('cookie-ok','essential');" style="background:transparent;color:rgba(255,255,255,0.65);font-size:0.78rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:10px 16px;border:1px solid rgba(255,255,255,0.2);cursor:pointer;border-radius:2px;">Esensial saja</button>
+    </div>
+  </div>
+  <script>if(localStorage.getItem('cookie-ok'))document.getElementById('cookie-banner').style.display='none';</script>
+
+</body>
+</html>
