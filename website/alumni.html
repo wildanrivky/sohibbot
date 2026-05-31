@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Direktori Alumni | IKASI Polban — Cari Alumni Teknik Sipil</title>
+  <meta name="description" content="Temukan 1.451+ alumni Teknik Sipil Polban. Cari berdasarkan angkatan, kota, atau bidang pekerjaan. Daftar sekarang untuk akses kontak lengkap.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <script src="/supabase.min.js"></script>
+  <style>
+    :root {
+      --gold:       #F5C000;
+      --gold-deep:  #C49A00;
+      --gold-light: #FFD740;
+      --black:      #0D0D0D;
+      --black-soft: #2C2C2C;
+      --black-mid:  #1A1A1A;
+      --black-card: #161616;
+      --white:      #FFFFFF;
+      --gray:       #888;
+      --gray-light: #aaa;
+      --sans: 'Inter', sans-serif;
+      --serif: 'Playfair Display', serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: var(--sans);
+      min-height: 100vh;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    /* ─── NAV ─── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(13,13,13,0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid #222;
+      padding: 0 1.5rem;
+    }
+    .nav-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: flex; align-items: center; gap: 1rem; height: 60px;
+    }
+    .nav-logo {
+      font-family: var(--serif);
+      font-size: 1.2rem; color: var(--gold);
+      letter-spacing: 0.5px; margin-right: auto;
+    }
+    .nav-links { display: flex; gap: 0.25rem; }
+    .nav-links a {
+      color: var(--gray-light); text-decoration: none;
+      padding: 0.4rem 0.75rem; border-radius: 6px;
+      font-size: 0.875rem; transition: all 0.15s;
+    }
+    .nav-links a:hover, .nav-links a.active {
+      color: var(--gold); background: rgba(245,192,0,0.1);
+    }
+    .hamburger {
+      display: none; background: none; border: none;
+      color: var(--white); cursor: pointer; padding: 0.5rem; font-size: 1.3rem;
+    }
+    .mobile-menu { display: none; }
+
+    /* ─── HERO ─── */
+    .hero {
+      background: linear-gradient(135deg, #0D0D0D 0%, #1A1200 100%);
+      border-bottom: 1px solid #2a2000;
+      padding: 48px 24px 32px;
+      text-align: center;
+    }
+    .hero h1 {
+      font-family: var(--serif);
+      font-size: clamp(1.8rem, 5vw, 2.8rem);
+      color: var(--gold);
+      margin-bottom: 10px;
+    }
+    .hero p {
+      color: var(--gray-light);
+      font-size: 0.95rem;
+      margin-bottom: 28px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .hero-stats {
+      display: flex; justify-content: center; gap: 32px;
+      flex-wrap: wrap;
+    }
+    .stat { text-align: center; }
+    .stat-num { font-size: 1.6rem; font-weight: 700; color: var(--gold); }
+    .stat-label { font-size: 0.75rem; color: var(--gray); text-transform: uppercase; letter-spacing: 0.5px; }
+
+    /* ─── SEARCH & FILTER ─── */
+    .controls {
+      background: var(--black-mid);
+      border-bottom: 1px solid #222;
+      padding: 16px 24px;
+      display: flex; flex-wrap: wrap; gap: 12px; align-items: center;
+    }
+    .search-box {
+      flex: 1 1 260px;
+      position: relative;
+    }
+    .search-box input {
+      width: 100%;
+      background: var(--black-soft);
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 10px 14px 10px 40px;
+      color: var(--white);
+      font-size: 0.9rem;
+      font-family: var(--sans);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .search-box input:focus { border-color: var(--gold); }
+    .search-box input::placeholder { color: var(--gray); }
+    .search-icon {
+      position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+      color: var(--gray); font-size: 1rem; pointer-events: none;
+    }
+    select {
+      background: var(--black-soft);
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: var(--white);
+      font-size: 0.85rem;
+      font-family: var(--sans);
+      outline: none;
+      cursor: pointer;
+      transition: border-color 0.2s;
+      min-width: 140px;
+    }
+    select:focus { border-color: var(--gold); }
+    select option { background: var(--black-soft); }
+    .filter-count {
+      font-size: 0.8rem;
+      color: var(--gray);
+      white-space: nowrap;
+    }
+    .filter-count span { color: var(--gold); font-weight: 600; }
+    .btn-reset {
+      background: transparent;
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 10px 16px;
+      color: var(--gray);
+      font-size: 0.8rem;
+      font-family: var(--sans);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-reset:hover { border-color: var(--gold); color: var(--gold); }
+
+    /* ─── GRID ─── */
+    .main { max-width: 1400px; margin: 0 auto; padding: 24px 20px; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+    }
+    .card {
+      background: var(--black-card);
+      border: 1px solid #222;
+      border-radius: 12px;
+      padding: 20px;
+      cursor: pointer;
+      transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--gold), transparent);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .card:hover {
+      border-color: var(--gold-deep);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(245,192,0,0.08);
+    }
+    .card:hover::before { opacity: 1; }
+
+    .card-header { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+    .avatar {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold-deep), var(--gold));
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 1.1rem;
+      color: var(--black);
+      flex-shrink: 0;
+    }
+    .avatar-f { background: linear-gradient(135deg, #a0522d, #cd853f); }
+    .card-name { font-weight: 600; font-size: 0.95rem; line-height: 1.3; }
+    .card-angkatan {
+      font-size: 0.75rem;
+      color: var(--gold);
+      font-weight: 500;
+      margin-top: 2px;
+    }
+    .card-info { display: flex; flex-direction: column; gap: 6px; }
+    .info-row {
+      display: flex; align-items: flex-start; gap: 8px;
+      font-size: 0.8rem; color: var(--gray-light); line-height: 1.4;
+    }
+    .info-row .icon { color: var(--gold); flex-shrink: 0; margin-top: 1px; }
+    .card-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+    .tag {
+      background: rgba(245,192,0,0.08);
+      border: 1px solid rgba(245,192,0,0.2);
+      border-radius: 20px;
+      padding: 2px 10px;
+      font-size: 0.7rem;
+      color: var(--gold);
+    }
+
+    /* ─── LOADING / EMPTY ─── */
+    .loading { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; padding: 0; }
+    .skeleton-card {
+      background: var(--black-soft);
+      border: 1px solid #222;
+      border-radius: 12px;
+      padding: 20px;
+      overflow: hidden;
+      position: relative;
+    }
+    .skeleton-card::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(90deg, transparent 0%, rgba(245,192,0,0.05) 50%, transparent 100%);
+      animation: shimmer 1.5s ease-in-out infinite;
+    }
+    @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+    .sk-header { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+    .sk-avatar { width: 48px; height: 48px; border-radius: 50%; background: #252525; flex-shrink: 0; }
+    .sk-lines { flex: 1; }
+    .sk-line { height: 10px; background: #252525; border-radius: 4px; margin-bottom: 6px; }
+    .sk-line.w80 { width: 80%; }
+    .sk-line.w50 { width: 50%; }
+    .sk-line.w65 { width: 65%; }
+    .sk-info { display: flex; flex-direction: column; gap: 8px; }
+    .empty { text-align: center; padding: 60px 20px; color: var(--gray); }
+    .empty h3 { color: var(--white); margin-bottom: 8px; }
+
+    /* ─── PAGINATION ─── */
+    .pagination {
+      display: flex; justify-content: center; align-items: center;
+      gap: 8px; padding: 32px 20px;
+      flex-wrap: wrap;
+    }
+    .page-btn {
+      background: var(--black-soft);
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 8px 14px;
+      color: var(--white);
+      font-size: 0.85rem;
+      font-family: var(--sans);
+      cursor: pointer;
+      transition: all 0.2s;
+      min-width: 40px;
+      text-align: center;
+    }
+    .page-btn:hover { border-color: var(--gold); color: var(--gold); }
+    .page-btn.active { background: var(--gold); color: var(--black); border-color: var(--gold); font-weight: 700; }
+    .page-btn:disabled { opacity: 0.3; cursor: default; }
+    .page-info { color: var(--gray); font-size: 0.8rem; padding: 8px; }
+
+    /* ─── MODAL ─── */
+    .modal-overlay {
+      position: fixed; inset: 0; z-index: 200;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(4px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 20px;
+      opacity: 0; pointer-events: none; transition: opacity 0.2s;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal {
+      background: var(--black-card);
+      border: 1px solid #333;
+      border-radius: 16px;
+      width: 100%; max-width: 560px;
+      max-height: 85vh;
+      overflow-y: auto;
+      padding: 28px;
+      transform: scale(0.95); transition: transform 0.2s;
+      position: relative;
+    }
+    .modal-overlay.open .modal { transform: scale(1); }
+    .modal-close {
+      position: absolute; top: 16px; right: 16px;
+      background: #222; border: none; border-radius: 50%;
+      width: 32px; height: 32px;
+      color: var(--gray); font-size: 1.2rem;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s;
+    }
+    .modal-close:hover { background: #333; color: var(--white); }
+    .modal-avatar {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold-deep), var(--gold));
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 1.8rem;
+      color: var(--black);
+      margin-bottom: 16px;
+    }
+    .modal-avatar.f { background: linear-gradient(135deg, #a0522d, #cd853f); }
+    .modal-name { font-family: var(--serif); font-size: 1.4rem; color: var(--white); margin-bottom: 4px; }
+    .modal-sub { font-size: 0.85rem; color: var(--gold); margin-bottom: 24px; }
+    .modal-section { margin-bottom: 20px; }
+    .modal-section h4 {
+      font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px;
+      color: var(--gray); margin-bottom: 12px;
+      border-bottom: 1px solid #222; padding-bottom: 8px;
+    }
+    .modal-row {
+      display: flex; gap: 12px; margin-bottom: 10px;
+      font-size: 0.85rem; color: var(--gray-light); line-height: 1.4;
+    }
+    .modal-row .icon { color: var(--gold); flex-shrink: 0; width: 18px; }
+    .modal-row .label { color: var(--gray); min-width: 110px; flex-shrink: 0; }
+    .modal-row .val { color: var(--white); }
+    .badge {
+      display: inline-block;
+      background: rgba(245,192,0,0.1);
+      border: 1px solid rgba(245,192,0,0.25);
+      border-radius: 20px;
+      padding: 3px 12px;
+      font-size: 0.75rem;
+      color: var(--gold);
+      margin: 2px;
+    }
+    .lock-notice {
+      background: rgba(245,192,0,0.05);
+      border: 1px solid rgba(245,192,0,0.15);
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: 0.8rem;
+      color: var(--gray);
+      text-align: center;
+      margin-top: 16px;
+    }
+    .lock-notice span { color: var(--gold); }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .hamburger { display: block; }
+      .mobile-menu {
+        position: fixed; top: 60px; left: 0; right: 0; bottom: 0;
+        background: rgba(13,13,13,0.98); z-index: 99;
+        padding: 1rem; flex-direction: column; gap: 0.5rem;
+        border-top: 1px solid #222; overflow-y: auto;
+      }
+      .mobile-menu.open { display: flex; }
+      .mobile-menu a {
+        color: var(--white); text-decoration: none;
+        padding: 0.75rem 1rem; border-radius: 8px; font-size: 1rem;
+      }
+      .mobile-menu a:hover, .mobile-menu a.active {
+        color: var(--gold); background: rgba(245,192,0,0.1);
+      }
+    }
+    @media (max-width: 640px) {
+      .hero { padding: 32px 16px 24px; }
+      .controls { padding: 12px 16px; }
+      .main { padding: 16px; }
+      .grid { grid-template-columns: 1fr; gap: 12px; }
+      .hero-stats { gap: 20px; }
+    }
+  </style>
+  <!-- SEO: Favicon, OG Tags, Twitter Card -->
+  
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://ikasipolban.com/alumni.html">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://ikasipolban.com/alumni.html">
+  <meta property="og:title" content="Direktori 1.451+ Alumni Teknik Sipil Polban | IKASI">
+  <meta property="og:description" content="Temukan 1.451+ alumni Teknik Sipil Polban. Cari berdasarkan angkatan, kota, atau bidang pekerjaan. Daftar sekarang untuk akses kontak lengkap.">
+  <meta property="og:image" content="https://ikasipolban.com/og-image.png">
+  <meta property="og:locale" content="id_ID">
+  <meta property="og:site_name" content="IKASI Polban">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Direktori 1.451+ Alumni Teknik Sipil Polban | IKASI">
+  <meta name="twitter:description" content="Temukan 1.451+ alumni Teknik Sipil Polban. Cari berdasarkan angkatan, kota, atau bidang pekerjaan. Daftar sekarang untuk akses kontak lengkap.">
+  <meta name="twitter:image" content="https://ikasipolban.com/og-image.png">
+  <!-- Google Analytics 4 — ganti G-XXXXXXXXXX dengan Measurement ID dari analytics.google.com -->
+  <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script> -->
+
+  <!-- Microsoft Clarity — ganti CLARITY_PROJECT_ID dengan ID dari clarity.microsoft.com -->
+  <!-- <script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+      c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+      t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+      y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "CLARITY_PROJECT_ID");
+  </script> -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type":"ListItem","position":1,"name":"Beranda","item":"https://ikasipolban.com/"},
+      {"@type":"ListItem","position":2,"name":"Direktori Alumni","item":"https://ikasipolban.com/alumni.html"}
+    ]
+  }
+  </script>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a class="nav-logo" href="index.html">IKASI Polban</a>
+    <div class="nav-links">
+      <a href="index.html">Beranda</a>
+      <a href="alumni.html" class="active">Direktori Alumni</a>
+      <a href="bisnis.html">Bisnis Alumni</a>
+      <a href="angkatan.html">Per Angkatan</a>
+      <a href="event.html">Acara</a>
+      <a href="news.html">Berita</a>
+      <a href="pengurus.html">Pengurus</a>
+      <a href="index.html#kontak" style="background:var(--gold);color:#0D0D0D;padding:0.4rem 1rem;border-radius:4px;font-weight:700;font-size:0.82rem;">Bergabung →</a>
+    </div>
+    <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">☰</button>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html">Beranda</a>
+  <a href="alumni.html" class="active">Direktori Alumni</a>
+  <a href="bisnis.html">Bisnis Alumni</a>
+  <a href="angkatan.html">Per Angkatan</a>
+  <a href="event.html">Acara</a>
+  <a href="news.html">Berita</a>
+  <a href="pengurus.html">Pengurus</a>
+  <a href="index.html#kontak" style="background:var(--gold);color:#0D0D0D;padding:0.75rem 1rem;border-radius:8px;font-weight:700;">Bergabung Sekarang →</a>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <h1>Direktori Alumni IKASI</h1>
+  <p>Temukan rekan alumni Teknik Sipil Politeknik Negeri Bandung</p>
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-num" id="stat-total">–</div>
+      <div class="stat-label">Alumni Terdata</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">43</div>
+      <div class="stat-label">Angkatan (1982–2022)</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num" id="stat-bisnis">242</div>
+      <div class="stat-label">Alumni Punya Bisnis</div>
+    </div>
+  </div>
+</div>
+
+<!-- CONTROLS -->
+<div class="controls">
+  <div class="search-box">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="search" placeholder="Cari nama alumni..." autocomplete="off">
+  </div>
+  <select id="filter-angkatan">
+    <option value="">Semua Angkatan</option>
+  </select>
+  <select id="filter-prodi">
+    <option value="">Semua Prodi</option>
+    <option value="TEKNIK KONSTRUKSI SIPIL">Teknik Konstruksi Sipil</option>
+    <option value="TEKNIK KONSTRUKSI GEDUNG">Teknik Konstruksi Gedung</option>
+    <option value="TEKNIK PERANCANGAN JALAN DAN JEMBATAN">Teknik Perancangan Jalan & Jembatan</option>
+    <option value="TEKNIK PERAWATAN DAN PERBAIKAN GEDUNG">Teknik Perawatan & Perbaikan Gedung</option>
+    <option value="REKAYASA INFRASTRUKTUR">Rekayasa Infrastruktur</option>
+  </select>
+  <select id="filter-bidang">
+    <option value="">Semua Bidang Kerja</option>
+    <option value="KONSTRUKSI">Konstruksi</option>
+    <option value="KONSULTAN">Konsultan</option>
+    <option value="PEMERINTAHAN">Pemerintahan</option>
+    <option value="PENDIDIKAN">Pendidikan</option>
+    <option value="WIRAUSAHA">Wirausaha</option>
+    <option value="PERBANKAN / KEUANGAN">Perbankan / Keuangan</option>
+  </select>
+  <select id="filter-domisili">
+    <option value="">Semua Kota</option>
+  </select>
+  <div class="filter-count">Menampilkan <span id="count-display">–</span> alumni</div>
+  <button class="btn-reset" onclick="resetFilters()">Reset</button>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="main">
+  <div id="loading" class="loading" role="status" aria-label="Memuat data alumni">
+    <!-- 12 skeleton cards -->
+    <div class="skeleton-card"><div class="sk-header"><div class="sk-avatar"></div><div class="sk-lines"><div class="sk-line w80"></div><div class="sk-line w50"></div></div></div><div class="sk-info"><div class="sk-line w65"></div><div class="sk-line w80"></div><div class="sk-line w50"></div></div></div>
+    <div class="skeleton-card"><div class="sk-header"><div class="sk-avatar"></div><div class="sk-lines"><div class="sk-line w80"></div><div class="sk-line w50"></div></div></div><div class="sk-info"><div class="sk-line w65"></div><div class="sk-line w80"></div><div class="sk-line w50"></div></div></div>
+    <div class="skeleton-card"><div class="sk-header"><div class="sk-avatar"></div><div class="sk-lines"><div class="sk-line w80"></div><div class="sk-line w50"></div></div></div><div class="sk-info"><div class="sk-line w65"></div><div class="sk-line w80"></div><div class="sk-line w50"></div></div></div>
+    <div class="skeleton-card"><div class="sk-header"><div class="sk-avatar"></div><div class="sk-lines"><div class="sk-line w80"></div><div class="sk-line w50"></div></div></div><div class="sk-info"><div class="sk-line w65"></div><div class="sk-line w80"></div><div class="sk-line w50"></div></div></div>
+    <div class="skeleton-card"><div class="sk-header"><div class="sk-avatar"></div><div class="sk-lines"><div class="sk-line w80"></div><div class="sk-line w50"></div></div></div><div class="sk-info"><div class="sk-line w65"></div><div class="sk-line w80"></div><div class="sk-line w50"></div></div></div>
+    <div class="skeleton-card"><div class="sk-header"><div class="sk-avatar"></div><div class="sk-lines"><div class="sk-line w80"></div><div class="sk-line w50"></div></div></div><div class="sk-info"><div class="sk-line w65"></div><div class="sk-line w80"></div><div class="sk-line w50"></div></div></div>
+    <div class="skeleton-card"><div class="sk-header"><div class="sk-avatar"></div><div class="sk-lines"><div class="sk-line w80"></div><div class="sk-line w50"></div></div></div><div class="sk-info"><div class="sk-line w65"></div><div class="sk-line w80"></div><div class="sk-line w50"></div></div></div>
+    <div class="skeleton-card"><div class="sk-header"><div class="sk-avatar"></div><div class="sk-lines"><div class="sk-line w80"></div><div class="sk-line w50"></div></div></div><div class="sk-info"><div class="sk-line w65"></div><div class="sk-line w80"></div><div class="sk-line w50"></div></div></div>
+    <div class="skeleton-card"><div class="sk-header"><div class="sk-avatar"></div><div class="sk-lines"><div class="sk-line w80"></div><div class="sk-line w50"></div></div></div><div class="sk-info"><div class="sk-line w65"></div><div class="sk-line w80"></div><div class="sk-line w50"></div></div></div>
+    <div class="skeleton-card"><div class="sk-header"><div class="sk-avatar"></div><div class="sk-lines"><div class="sk-line w80"></div><div class="sk-line w50"></div></div></div><div class="sk-info"><div class="sk-line w65"></div><div class="sk-line w80"></div><div class="sk-line w50"></div></div></div>
+    <div class="skeleton-card"><div class="sk-header"><div class="sk-avatar"></div><div class="sk-lines"><div class="sk-line w80"></div><div class="sk-line w50"></div></div></div><div class="sk-info"><div class="sk-line w65"></div><div class="sk-line w80"></div><div class="sk-line w50"></div></div></div>
+    <div class="skeleton-card"><div class="sk-header"><div class="sk-avatar"></div><div class="sk-lines"><div class="sk-line w80"></div><div class="sk-line w50"></div></div></div><div class="sk-info"><div class="sk-line w65"></div><div class="sk-line w80"></div><div class="sk-line w50"></div></div></div>
+  </div>
+  <div id="grid" class="grid" style="display:none"></div>
+  <div id="empty" class="empty" style="display:none">
+    <h3>Tidak ada alumni ditemukan</h3>
+    <p>Coba ubah filter atau kata kunci pencarian</p>
+  </div>
+  <div id="pagination" class="pagination"></div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal" id="modal-content">
+    <button class="modal-close" onclick="closeModalDirect()">✕</button>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+  const SUPABASE_URL = 'https://wsoqlinhastagyhanfmt.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indzb3FsaW5oYXN0YWd5aGFuZm10Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk2MTkwNzQsImV4cCI6MjA5NTE5NTA3NH0.Y6iw8t0yQZyJY6zqWk7MQ5EKzcnSeMkygNAQD6Q3ggk';
+  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  const PAGE_SIZE = 48;
+  let allData = [];
+  let filtered = [];
+  let currentPage = 1;
+  let searchTimeout;
+
+  // ─── INIT ───
+  async function init() {
+    await loadAllAlumni();
+    populateFilters();
+    renderGrid();
+  }
+
+  async function loadAllAlumni() {
+    let all = [];
+    let offset = 0;
+    const LIMIT = 1000;
+    while (true) {
+      const { data, error } = await sb
+        .from('alumni_public')
+        .select('id,nama,angkatan,prodi,jenis_kelamin,domisili,bidang_pekerjaan,tempat_kerja,jabatan,punya_ska,bersedia_kp,bersedia_dosen_tamu,minat_hobi,foto_url,is_verified')
+        .order('angkatan', { ascending: false })
+        .order('nama', { ascending: true })
+        .range(offset, offset + LIMIT - 1);
+
+      if (error) { console.error(error); break; }
+      all = all.concat(data || []);
+      if (!data || data.length < LIMIT) break;
+      offset += LIMIT;
+    }
+    allData = all;
+    filtered = all;
+    document.getElementById('stat-total').textContent = all.length.toLocaleString();
+    document.getElementById('count-display').textContent = all.length.toLocaleString();
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('grid').style.display = 'grid';
+  }
+
+  // ─── FILTERS ───
+  function populateFilters() {
+    // Angkatan
+    const angkatanSet = [...new Set(allData.map(a => a.angkatan).filter(Boolean))].sort((a,b) => b-a);
+    const selAng = document.getElementById('filter-angkatan');
+    angkatanSet.forEach(y => {
+      const opt = document.createElement('option');
+      opt.value = y;
+      opt.textContent = y;
+      selAng.appendChild(opt);
+    });
+
+    // Domisili
+    const domisiliSet = [...new Set(
+      allData.map(a => {
+        if (!a.domisili) return null;
+        // Ambil kota pertama saja
+        return a.domisili.trim().split(',')[0].trim();
+      }).filter(Boolean)
+    )].sort();
+    const selDom = document.getElementById('filter-domisili');
+    domisiliSet.slice(0, 60).forEach(d => {
+      const opt = document.createElement('option');
+      opt.value = d;
+      opt.textContent = d;
+      selDom.appendChild(opt);
+    });
+  }
+
+  function applyFilters() {
+    const search = document.getElementById('search').value.toLowerCase().trim();
+    const angkatan = document.getElementById('filter-angkatan').value;
+    const prodi = document.getElementById('filter-prodi').value;
+    const bidang = document.getElementById('filter-bidang').value;
+    const domisili = document.getElementById('filter-domisili').value;
+
+    filtered = allData.filter(a => {
+      if (search && !a.nama?.toLowerCase().includes(search)) return false;
+      if (angkatan && String(a.angkatan) !== angkatan) return false;
+      if (prodi && a.prodi !== prodi) return false;
+      if (bidang && !a.bidang_pekerjaan?.toUpperCase().includes(bidang)) return false;
+      if (domisili && !a.domisili?.toLowerCase().includes(domisili.toLowerCase())) return false;
+      return true;
+    });
+
+    currentPage = 1;
+    document.getElementById('count-display').textContent = filtered.length.toLocaleString();
+    renderGrid();
+  }
+
+  function resetFilters() {
+    document.getElementById('search').value = '';
+    document.getElementById('filter-angkatan').value = '';
+    document.getElementById('filter-prodi').value = '';
+    document.getElementById('filter-bidang').value = '';
+    document.getElementById('filter-domisili').value = '';
+    applyFilters();
+  }
+
+  // ─── RENDER GRID ───
+  function renderGrid() {
+    const grid = document.getElementById('grid');
+    const empty = document.getElementById('empty');
+    const pagination = document.getElementById('pagination');
+
+    if (filtered.length === 0) {
+      grid.style.display = 'none';
+      empty.style.display = 'block';
+      pagination.innerHTML = '';
+      return;
+    }
+
+    grid.style.display = 'grid';
+    empty.style.display = 'none';
+
+    const start = (currentPage - 1) * PAGE_SIZE;
+    const pageData = filtered.slice(start, start + PAGE_SIZE);
+
+    grid.innerHTML = pageData.map(a => cardHTML(a)).join('');
+    renderPagination();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function cardHTML(a) {
+    const initials = getInitials(a.nama);
+    const isFemale = a.jenis_kelamin === 'P';
+    const avatarClass = isFemale ? 'avatar avatar-f' : 'avatar';
+    const prodi = shortenProdi(a.prodi);
+    const tags = [];
+    if (a.punya_ska) tags.push('SKA/SKK');
+    if (a.bersedia_kp) tags.push('Buka KP');
+    if (a.bersedia_dosen_tamu && a.bersedia_dosen_tamu !== 'TIDAK') tags.push('Dosen Tamu');
+
+    return `<div class="card" onclick="openModal('${a.id}')">
+      <div class="card-header">
+        <div class="${avatarClass}">${initials}</div>
+        <div>
+          <div class="card-name">${esc(a.nama)}</div>
+          <div class="card-angkatan">Angkatan ${a.angkatan || '-'} · ${prodi}</div>
+        </div>
+      </div>
+      <div class="card-info">
+        ${a.bidang_pekerjaan ? `<div class="info-row"><span class="icon">💼</span>${esc(titleCase(a.bidang_pekerjaan))}</div>` : ''}
+        ${a.tempat_kerja ? `<div class="info-row"><span class="icon">🏢</span>${esc(a.tempat_kerja)}</div>` : ''}
+        ${a.domisili ? `<div class="info-row"><span class="icon">📍</span>${esc(a.domisili)}</div>` : ''}
+      </div>
+      ${tags.length ? `<div class="card-tags">${tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>` : ''}
+    </div>`;
+  }
+
+  // ─── PAGINATION ───
+  function renderPagination() {
+    const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
+    const pag = document.getElementById('pagination');
+    if (totalPages <= 1) { pag.innerHTML = ''; return; }
+
+    let html = '';
+    html += `<button class="page-btn" onclick="goPage(${currentPage-1})" ${currentPage===1?'disabled':''}>← Prev</button>`;
+
+    const range = getPageRange(currentPage, totalPages);
+    let prev = null;
+    range.forEach(p => {
+      if (prev !== null && p - prev > 1) html += `<span class="page-info">…</span>`;
+      html += `<button class="page-btn ${p===currentPage?'active':''}" onclick="goPage(${p})">${p}</button>`;
+      prev = p;
+    });
+
+    html += `<button class="page-btn" onclick="goPage(${currentPage+1})" ${currentPage===totalPages?'disabled':''}>Next →</button>`;
+    html += `<span class="page-info">Hal ${currentPage} / ${totalPages}</span>`;
+    pag.innerHTML = html;
+  }
+
+  function getPageRange(current, total) {
+    const range = new Set([1, total, current]);
+    for (let i = Math.max(1,current-2); i <= Math.min(total,current+2); i++) range.add(i);
+    return [...range].sort((a,b)=>a-b);
+  }
+
+  function goPage(p) {
+    const total = Math.ceil(filtered.length / PAGE_SIZE);
+    if (p < 1 || p > total) return;
+    currentPage = p;
+    renderGrid();
+  }
+
+  // ─── MODAL ───
+  async function openModal(id) {
+    const a = allData.find(x => x.id === id);
+    if (!a) return;
+
+    const initials = getInitials(a.nama);
+    const isFemale = a.jenis_kelamin === 'P';
+
+    let html = `
+      <div class="modal-avatar ${isFemale?'f':''}">${initials}</div>
+      <div class="modal-name">${esc(a.nama)}</div>
+      <div class="modal-sub">Angkatan ${a.angkatan} · ${esc(a.prodi || '-')}</div>
+
+      <div class="modal-section">
+        <h4>Profil Pekerjaan</h4>
+        ${a.jabatan ? `<div class="modal-row"><span class="icon">💼</span><span class="label">Jabatan</span><span class="val">${esc(a.jabatan)}</span></div>` : ''}
+        ${a.tempat_kerja ? `<div class="modal-row"><span class="icon">🏢</span><span class="label">Tempat Kerja</span><span class="val">${esc(a.tempat_kerja)}</span></div>` : ''}
+        ${a.bidang_pekerjaan ? `<div class="modal-row"><span class="icon">🔧</span><span class="label">Bidang</span><span class="val">${esc(titleCase(a.bidang_pekerjaan))}</span></div>` : ''}
+        ${a.domisili ? `<div class="modal-row"><span class="icon">📍</span><span class="label">Domisili</span><span class="val">${esc(a.domisili)}</span></div>` : ''}
+      </div>`;
+
+    if (a.pendidikan_terakhir || a.institusi) {
+      html += `
+      <div class="modal-section">
+        <h4>Pendidikan</h4>
+        ${a.pendidikan_terakhir ? `<div class="modal-row"><span class="icon">🎓</span><span class="label">Gelar</span><span class="val">${esc(a.pendidikan_terakhir)}</span></div>` : ''}
+        ${a.institusi ? `<div class="modal-row"><span class="icon">🏛️</span><span class="label">Institusi</span><span class="val">${esc(a.institusi)}</span></div>` : ''}
+        ${a.tahun_lulus ? `<div class="modal-row"><span class="icon">📅</span><span class="label">Tahun Lulus</span><span class="val">${a.tahun_lulus}</span></div>` : ''}
+      </div>`;
+    }
+
+    if (a.minat_hobi && a.minat_hobi.length) {
+      html += `
+      <div class="modal-section">
+        <h4>Minat & Hobi</h4>
+        <div>${a.minat_hobi.map(h => `<span class="badge">${esc(h)}</span>`).join('')}</div>
+      </div>`;
+    }
+
+    const extras = [];
+    if (a.punya_ska) extras.push('Pemilik SKA/SKK/SKT');
+    if (a.bersedia_kp) extras.push('Buka Kerja Praktek');
+    if (a.bersedia_dosen_tamu && a.bersedia_dosen_tamu !== 'TIDAK') extras.push('Bersedia Dosen Tamu');
+    if (extras.length) {
+      html += `
+      <div class="modal-section">
+        <h4>Keterlibatan</h4>
+        <div>${extras.map(e => `<span class="badge">${e}</span>`).join('')}</div>
+      </div>`;
+    }
+
+    html += `<div class="lock-notice">🔒 Kontak hanya untuk member alumni — <span>Login segera hadir</span></div>`;
+
+    document.getElementById('modal-body').innerHTML = html;
+    document.getElementById('modal-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal(e) {
+    if (e.target === document.getElementById('modal-overlay')) closeModalDirect();
+  }
+  function closeModalDirect() {
+    document.getElementById('modal-overlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  // ─── HELPERS ───
+  function getInitials(name) {
+    if (!name) return '?';
+    const words = name.trim().split(/\s+/);
+    if (words.length >= 2) return (words[0][0] + words[1][0]).toUpperCase();
+    return name.substring(0, 2).toUpperCase();
+  }
+
+  function shortenProdi(prodi) {
+    if (!prodi) return '–';
+    const map = {
+      'TEKNIK KONSTRUKSI SIPIL': 'TKS',
+      'TEKNIK KONSTRUKSI GEDUNG': 'TKG',
+      'TEKNIK PERANCANGAN JALAN DAN JEMBATAN': 'TPJJ',
+      'TEKNIK PERAWATAN DAN PERBAIKAN GEDUNG': 'TPPG',
+      'REKAYASA INFRASTRUKTUR': 'RI',
+    };
+    return map[prodi] || prodi.split(' ').map(w=>w[0]).join('');
+  }
+
+  function titleCase(str) {
+    if (!str) return '';
+    return str.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
+  }
+
+  function esc(s) {
+    if (!s) return '';
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  // ─── EVENTS ───
+  document.getElementById('search').addEventListener('input', () => {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(applyFilters, 300);
+  });
+  document.getElementById('filter-angkatan').addEventListener('change', applyFilters);
+  document.getElementById('filter-prodi').addEventListener('change', applyFilters);
+  document.getElementById('filter-bidang').addEventListener('change', applyFilters);
+  document.getElementById('filter-domisili').addEventListener('change', applyFilters);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModalDirect(); });
+
+  init();
+
+  function toggleMenu() {
+    document.getElementById('mobileMenu').classList.toggle('open');
+  }
+</script>
+  <!-- WhatsApp Floating Button -->
+  <a href="https://wa.me/6281234681730?text=Halo%20IKASI%2C%20saya%20ingin%20bertanya%20atau%20bergabung." 
+     target="_blank" rel="noopener noreferrer"
+     title="Chat WhatsApp IKASI"
+     style="position:fixed;bottom:24px;right:24px;z-index:850;width:52px;height:52px;border-radius:50%;background:#25D366;color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(37,211,102,0.4);transition:transform 0.25s,box-shadow 0.25s;text-decoration:none;"
+     onmouseover="this.style.transform='scale(1.1)'"
+     onmouseout="this.style.transform='scale(1)'">
+    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.523 5.85L.057 23.817a.75.75 0 00.921.921l5.967-1.466A11.938 11.938 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.953 0-3.78-.527-5.348-1.445l-.383-.229-3.972.976.996-3.876-.25-.396A9.956 9.956 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
+    </svg>
+  </a>
+
+  <!-- Cookie Consent Banner -->
+  <div id="cookie-banner" style="position:fixed;bottom:0;left:0;right:0;background:rgba(13,13,13,0.97);border-top:1px solid rgba(245,192,0,0.2);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);z-index:999;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
+    <p style="font-size:0.82rem;color:rgba(255,255,255,0.65);margin:0;max-width:700px;line-height:1.6;">
+      🍪 Kami menggunakan cookie untuk analitik dan meningkatkan pengalaman Anda. <a href="/privacy.html" style="color:#F5C000;text-decoration:underline;">Kebijakan Privasi</a>
+    </p>
+    <div style="display:flex;gap:8px;flex-shrink:0;flex-wrap:wrap;">
+      <button onclick="document.getElementById('cookie-banner').style.display='none';localStorage.setItem('cookie-ok','all');" style="background:#F5C000;color:#0D0D0D;font-size:0.78rem;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;padding:10px 20px;border:none;cursor:pointer;border-radius:2px;">Setuju</button>
+      <button onclick="document.getElementById('cookie-banner').style.display='none';localStorage.setItem('cookie-ok','essential');" style="background:transparent;color:rgba(255,255,255,0.65);font-size:0.78rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:10px 16px;border:1px solid rgba(255,255,255,0.2);cursor:pointer;border-radius:2px;">Esensial saja</button>
+    </div>
+  </div>
+  <script>if(localStorage.getItem('cookie-ok'))document.getElementById('cookie-banner').style.display='none';</script>
+</body>
+</html>

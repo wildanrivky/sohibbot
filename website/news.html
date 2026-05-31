@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Berita & Artikel | IKASI Polban — Alumni Teknik Sipil</title>
+  <meta name="description" content="Berita, cerita alumni, dan update terbaru dari IKASI Polban. Profil alumni inspiratif, liputan event, dan info industri konstruksi." />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --gold: #C9A84C; --gold-light: #E8C97A; --gold-dim: #8a6f2e;
+      --bg: #0f0f0f; --bg2: #1a1a1a; --bg3: #242424;
+      --border: #2e2e2e; --text: #e8e8e8; --text-dim: #888; --text-muted: #555;
+    }
+    body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; min-height: 100vh; }
+
+    nav { background: var(--bg2); border-bottom: 1px solid var(--border); padding: 0 1.5rem; position: sticky; top: 0; z-index: 100; }
+    .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; gap: 1rem; height: 56px; }
+    .nav-logo { font-weight: 700; font-size: 1.1rem; color: var(--gold); text-decoration: none; margin-right: auto; }
+    .nav-links { display: flex; gap: 0.25rem; }
+    .nav-links a { color: var(--text-dim); text-decoration: none; padding: 0.4rem 0.75rem; border-radius: 6px; font-size: 0.875rem; transition: all 0.15s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--gold); background: rgba(201,168,76,0.1); }
+    .hamburger { display: none; background: none; border: none; color: var(--text); cursor: pointer; padding: 0.5rem; }
+    .mobile-menu { display: none; }
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .hamburger { display: block; }
+      .mobile-menu { position: fixed; top: 56px; left: 0; right: 0; bottom: 0; background: var(--bg2); z-index: 99; padding: 1rem; flex-direction: column; gap: 0.5rem; border-top: 1px solid var(--border); }
+      .mobile-menu.open { display: flex; }
+      .mobile-menu a { color: var(--text); text-decoration: none; padding: 0.75rem 1rem; border-radius: 8px; font-size: 1rem; }
+      .mobile-menu a:hover, .mobile-menu a.active { color: var(--gold); background: rgba(201,168,76,0.1); }
+    }
+
+    .page-header { background: linear-gradient(135deg, var(--bg2) 0%, #1c1408 100%); border-bottom: 1px solid var(--border); padding: 2.5rem 1.5rem; text-align: center; }
+    .page-header h1 { font-size: clamp(1.5rem, 4vw, 2rem); font-weight: 700; color: var(--gold-light); margin-bottom: 0.5rem; }
+    .page-header p { color: var(--text-dim); font-size: 0.95rem; max-width: 640px; margin-left: auto; margin-right: auto; line-height: 1.6; }
+
+    main { max-width: 900px; margin: 0 auto; padding: 2.5rem 1.5rem; }
+
+    /* ARTICLES */
+    .article-featured {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      margin-bottom: 2rem;
+      cursor: pointer;
+      transition: all 0.15s;
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      min-height: 200px;
+    }
+    .article-featured:hover { border-color: var(--gold-dim); box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+    .article-thumb {
+      background: linear-gradient(135deg, #1c1408, #2a1e06);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      border-right: 1px solid var(--border);
+    }
+    .article-body { padding: 1.5rem; display: flex; flex-direction: column; justify-content: center; }
+    .article-cat { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em; color: var(--gold); text-transform: uppercase; margin-bottom: 0.5rem; }
+    .article-title { font-size: 1.2rem; font-weight: 700; color: var(--text); line-height: 1.4; margin-bottom: 0.75rem; }
+    .article-excerpt { font-size: 0.875rem; color: var(--text-dim); line-height: 1.6; margin-bottom: 1rem; }
+    .article-meta { font-size: 0.75rem; color: var(--text-muted); display: flex; gap: 1rem; }
+    .article-read-more { display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.8rem; color: var(--gold); font-weight: 600; margin-top: 0.5rem; }
+
+    .articles-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; margin-bottom: 2.5rem; }
+    .article-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .article-card:hover { border-color: var(--gold-dim); background: var(--bg3); }
+    .card-thumb { background: linear-gradient(135deg, #1c1408, #2a1e06); height: 120px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; }
+    .card-content { padding: 1rem; }
+    .card-cat { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.1em; color: var(--gold); text-transform: uppercase; margin-bottom: 0.35rem; }
+    .card-title { font-size: 0.95rem; font-weight: 600; color: var(--text); line-height: 1.4; margin-bottom: 0.5rem; }
+    .card-excerpt { font-size: 0.8rem; color: var(--text-dim); line-height: 1.5; margin-bottom: 0.75rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .card-meta { font-size: 0.7rem; color: var(--text-muted); display: flex; gap: 0.75rem; }
+
+    /* ARTICLE DETAIL */
+    #article-detail { display: none; }
+    .detail-back { display: inline-flex; align-items: center; gap: 0.5rem; color: var(--text-dim); text-decoration: none; font-size: 0.875rem; margin-bottom: 1.5rem; cursor: pointer; background: none; border: none; transition: color 0.15s; }
+    .detail-back:hover { color: var(--gold); }
+    .detail-article { max-width: 700px; margin: 0 auto; }
+    .detail-cat { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em; color: var(--gold); text-transform: uppercase; margin-bottom: 0.75rem; }
+    .detail-title { font-size: clamp(1.4rem, 4vw, 2rem); font-weight: 700; color: var(--text); line-height: 1.3; margin-bottom: 1rem; }
+    .detail-meta { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.5rem; display: flex; gap: 1.5rem; flex-wrap: wrap; }
+    .detail-divider { border: none; border-top: 1px solid var(--border); margin: 1.5rem 0; }
+    .detail-body { font-size: 0.95rem; line-height: 1.8; color: var(--text-dim); }
+    .detail-body h2 { font-size: 1.2rem; font-weight: 700; color: var(--text); margin: 1.5rem 0 0.75rem; }
+    .detail-body h3 { font-size: 1rem; font-weight: 600; color: var(--gold-light); margin: 1.25rem 0 0.5rem; }
+    .detail-body p { margin-bottom: 1rem; }
+    .detail-body ul, .detail-body ol { padding-left: 1.5rem; margin-bottom: 1rem; }
+    .detail-body li { margin-bottom: 0.35rem; }
+    .detail-body strong { color: var(--text); }
+    .detail-body blockquote { border-left: 3px solid var(--gold); padding-left: 1rem; margin: 1rem 0; color: var(--text-dim); font-style: italic; }
+
+    /* SECTION TITLE */
+    .section-title { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); }
+
+    /* COMING SOON BANNER */
+    .coming-soon {
+      background: rgba(201,168,76,0.06);
+      border: 1px dashed var(--gold-dim);
+      border-radius: 10px;
+      padding: 1.5rem;
+      text-align: center;
+      color: var(--text-dim);
+      font-size: 0.875rem;
+      margin-top: 1rem;
+    }
+    .coming-soon strong { color: var(--gold); display: block; margin-bottom: 0.35rem; }
+
+    @media (max-width: 600px) {
+      .article-featured { grid-template-columns: 1fr; }
+      .article-thumb { display: none; }
+    }
+  </style>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://ikasipolban.com/news.html" />
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://ikasipolban.com/news.html" />
+  <meta property="og:title" content="Berita & Cerita Alumni IKASI Polban | Teknik Sipil Politeknik Bandung" />
+  <meta property="og:description" content="Berita, cerita alumni, dan update terbaru dari IKASI Polban. Profil alumni inspiratif, liputan event, dan info industri konstruksi." />
+  <meta property="og:image" content="https://ikasipolban.com/og-image.png" />
+  <meta property="og:locale" content="id_ID" />
+  <meta property="og:site_name" content="IKASI Polban" />
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Berita & Cerita Alumni IKASI Polban | Teknik Sipil Politeknik Bandung" />
+  <meta name="twitter:description" content="Berita, cerita alumni, dan update terbaru dari IKASI Polban. Profil alumni inspiratif, liputan event, dan info industri konstruksi." />
+  <meta name="twitter:image" content="https://ikasipolban.com/og-image.png" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Beranda",
+        "item": "https://ikasipolban.com/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Berita & Kegiatan",
+        "item": "https://ikasipolban.com/news.html"
+      }
+    ]
+  }
+  </script>
+  <!-- Google Analytics 4 — ganti G-XXXXXXXXXX dengan Measurement ID dari analytics.google.com -->
+  <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script> -->
+
+  <!-- Microsoft Clarity — ganti CLARITY_PROJECT_ID dengan ID dari clarity.microsoft.com -->
+  <!-- <script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+      c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+      t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+      y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "CLARITY_PROJECT_ID");
+  </script> -->
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a class="nav-logo" href="index.html">IKASI Polban</a>
+    <div class="nav-links">
+      <a href="index.html">Beranda</a>
+      <a href="alumni.html">Direktori Alumni</a>
+      <a href="bisnis.html">Bisnis Alumni</a>
+      <a href="angkatan.html">Per Angkatan</a>
+      <a href="event.html">Acara</a>
+      <a href="news.html" class="active">Berita</a>
+      <a href="pengurus.html">Pengurus</a>
+      <a href="index.html#kontak" style="background:var(--gold);color:#0f0f0f;padding:0.4rem 1rem;border-radius:4px;font-weight:700;font-size:0.82rem;">Bergabung →</a>
+    </div>
+    <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">☰</button>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+      <a href="index.html">Beranda</a>
+      <a href="alumni.html">Direktori Alumni</a>
+      <a href="bisnis.html">Bisnis Alumni</a>
+      <a href="angkatan.html">Per Angkatan</a>
+      <a href="event.html">Acara</a>
+      <a href="news.html" class="active">Berita</a>
+      <a href="pengurus.html">Pengurus</a>
+      <a href="index.html#kontak" style="background:var(--gold);color:#0f0f0f;padding:0.75rem 1rem;border-radius:8px;font-weight:700;">Bergabung Sekarang →</a>
+    </div>
+
+<!-- LIST VIEW -->
+<div id="list-view">
+  <div class="page-header">
+    <h1>Berita & Informasi</h1>
+    <p>Update terkini, cerita alumni, dan pengumuman dari IKASI Polban</p>
+  </div>
+
+  <main>
+    <!-- FEATURED -->
+    <div class="section-title">Artikel Utama</div>
+    <div class="article-featured" onclick="showArticle('sejarah-ikasi')">
+      <div class="article-thumb">🏛️</div>
+      <div class="article-body">
+        <div class="article-cat">Sejarah</div>
+        <div class="article-title">Sejarah IKASI: Dari 1982 Hingga Kini, 4 Dekade Menyatukan Alumni Teknik Sipil Polban</div>
+        <div class="article-excerpt">Berdiri sejak tahun 1982, Ikatan Alumni Teknik Sipil (IKASI) telah melewati lebih dari empat dekade perjalanan panjang menyatukan ribuan lulusan Jurusan Teknik Sipil dari Politeknik ITB hingga menjadi Politeknik Negeri Bandung (Polban) saat ini.</div>
+        <div class="article-meta">
+          <span>📅 24 Mei 2026</span>
+          <span>✍️ Tim IKASI</span>
+          <span>⏱ 5 menit baca</span>
+        </div>
+        <div class="article-read-more">Baca selengkapnya →</div>
+      </div>
+    </div>
+
+    <!-- GRID -->
+    <div class="section-title" style="margin-top:2rem">Artikel Lainnya</div>
+    <div class="articles-grid">
+
+      <div class="article-card" onclick="showArticle('alumni-spotlight')">
+        <div class="card-thumb">👤</div>
+        <div class="card-content">
+          <div class="card-cat">Alumni Spotlight</div>
+          <div class="card-title">Alumni Spotlight: Karir & Dedikasi di Dunia Teknik Sipil</div>
+          <div class="card-excerpt">Kisah inspiratif alumni IKASI yang telah berkontribusi nyata di industri konstruksi, infrastruktur, dan konsultan teknik Indonesia.</div>
+          <div class="card-meta">
+            <span>📅 24 Mei 2026</span>
+            <span>⏱ 3 menit</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="article-card" onclick="showArticle('update-ts-polban')">
+        <div class="card-thumb">🎓</div>
+        <div class="card-content">
+          <div class="card-cat">Info Kampus</div>
+          <div class="card-title">Update Jurusan Teknik Sipil Polban 2026</div>
+          <div class="card-excerpt">Perkembangan terbaru program studi Teknik Sipil Polban, akreditasi, kurikulum, dan peluang kolaborasi alumni dengan kampus.</div>
+          <div class="card-meta">
+            <span>📅 24 Mei 2026</span>
+            <span>⏱ 4 menit</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="article-card" onclick="showArticle('platform-alumni')">
+        <div class="card-thumb">🌐</div>
+        <div class="card-content">
+          <div class="card-cat">Pengumuman</div>
+          <div class="card-title">Platform Digital IKASI Resmi Diluncurkan</div>
+          <div class="card-excerpt">Website IKASI kini hadir dengan fitur Direktori Alumni, Direktori Bisnis, dan halaman per angkatan untuk memudahkan alumni saling terhubung.</div>
+          <div class="card-meta">
+            <span>📅 24 Mei 2026</span>
+            <span>⏱ 2 menit</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+</div>
+
+<!-- ARTICLE DETAIL -->
+<div id="article-detail">
+  <div class="page-header" style="padding: 1.5rem">
+    <button class="detail-back" onclick="showList()">← Kembali ke Berita</button>
+  </div>
+  <main>
+    <div class="detail-article">
+      <div id="article-content"></div>
+    </div>
+  </main>
+</div>
+
+<script>
+// ─── ARTICLES DATA ───
+const ARTICLES = {
+  'sejarah-ikasi': {
+    cat: 'Sejarah',
+    title: 'Sejarah IKASI: Dari 1982 Hingga Kini, 4 Dekade Menyatukan Alumni Teknik Sipil Polban',
+    date: '24 Mei 2026',
+    author: 'Tim IKASI',
+    readTime: '5 menit baca',
+    body: `
+      <p>Ikatan Alumni Teknik Sipil — dikenal dengan nama <strong>IKASI</strong> — lahir pada tahun 1982, seiring dengan kelulusnya angkatan pertama Jurusan Teknik Sipil dari Politeknik ITB (yang kemudian bertransformasi menjadi Politeknik Negeri Bandung / Polban).</p>
+
+      <h2>Awal Berdiri (1982–1990)</h2>
+      <p>Pada awalnya, IKASI merupakan wadah sederhana bagi para lulusan untuk tetap terhubung setelah lulus. Angkatan 1982, 1983, dan tahun-tahun awal lainnya merupakan pioneer yang membangun fondasi jaringan alumni ini dari nol.</p>
+      <p>Di era tersebut, komunikasi masih mengandalkan surat, pertemuan fisik, dan mulut ke mulut. Meskipun terbatas, semangat kebersamaan dan kepedulian terhadap almamater menjadi perekat yang kuat.</p>
+
+      <h2>Berkembang dan Terstruktur (1990–2010)</h2>
+      <p>Memasuki era 1990an dan 2000an, jumlah anggota terus bertambah seiring semakin banyaknya lulusan tiap tahun. IKASI mulai memiliki struktur kepengurusan yang lebih formal, program kerja yang terencana, dan kegiatan rutin seperti:</p>
+      <ul>
+        <li>Reuni tahunan alumni</li>
+        <li>Buka puasa bersama</li>
+        <li>Diskusi dan seminar teknis</li>
+        <li>Silaturahmi per angkatan</li>
+      </ul>
+      <p>Periode ini juga ditandai dengan semakin banyaknya alumni yang berhasil berkiprah di berbagai sektor: kontraktor nasional, konsultan, BUMN, pemerintahan, hingga membuka usaha sendiri.</p>
+
+      <h2>Era Digital dan Ekspansi (2010–Sekarang)</h2>
+      <p>Dekade 2010an membawa perubahan besar. Jumlah alumni semakin banyak — angkatan 2009, 2010, 2011 masing-masing menyumbang puluhan hingga ratusan anggota baru. Media sosial membuat komunikasi jauh lebih mudah.</p>
+      <p>Grup WhatsApp per angkatan, Instagram <strong>@ikasi.poliitb.polban</strong>, dan email resmi <strong>ikasioffice@gmail.com</strong> menjadi saluran komunikasi utama.</p>
+
+      <h2>Platform Digital 2026</h2>
+      <p>Di tahun 2026, IKASI meluncurkan platform digital resmi di <strong>ikasipolban.com</strong> dengan fitur:</p>
+      <ul>
+        <li><strong>Direktori Alumni</strong> — 1.451 alumni terdaftar, bisa dicari berdasarkan nama, angkatan, kota, dan bidang pekerjaan</li>
+        <li><strong>Direktori Bisnis</strong> — 242 bisnis alumni yang bisa saling ditemukan dan didukung</li>
+        <li><strong>Halaman Per Angkatan</strong> — 41 angkatan dari 1982 hingga 2023 ter-dokumentasi</li>
+      </ul>
+      <p>Ini merupakan langkah besar menuju IKASI yang lebih inklusif, mudah dijangkau, dan berdampak nyata bagi seluruh alumni Teknik Sipil Polban.</p>
+
+      <hr class="detail-divider" />
+      <blockquote>
+        "Teknik Sipil Polban bukan hanya gelar — ini komunitas seumur hidup. IKASI hadir untuk memastikan koneksi itu tetap hidup dan berdampak."
+      </blockquote>
+    `
+  },
+
+  'alumni-spotlight': {
+    cat: 'Alumni Spotlight',
+    title: 'Alumni Spotlight: Karir & Dedikasi di Dunia Teknik Sipil',
+    date: '24 Mei 2026',
+    author: 'Tim IKASI',
+    readTime: '3 menit baca',
+    body: `
+      <p>Di balik 3.528+ alumni Teknik Sipil Polban, terdapat ribuan kisah inspiratif — dari lulusan yang kini memimpin proyek infrastruktur nasional, hingga yang membangun usaha konstruksi dari nol.</p>
+
+      <h2>Beragam Jalur Karir Alumni IKASI</h2>
+      <p>Data dari <strong>1.451 responden</strong> yang terdaftar di platform kami menunjukkan keragaman karir yang luar biasa:</p>
+      <ul>
+        <li><strong>Kontraktor & konstruksi</strong> — banyak alumni menjadi project manager, site engineer, atau mendirikan kontraktor sendiri</li>
+        <li><strong>Konsultan teknik</strong> — perencana, pengawas, ahli struktur, geoteknik, dan transportasi</li>
+        <li><strong>BUMN & pemerintahan</strong> — bekerja di Kementerian PUPR, BUMN konstruksi, dinas PU kabupaten/kota</li>
+        <li><strong>Akademisi</strong> — beberapa alumni melanjutkan S2/S3 dan menjadi dosen atau peneliti</li>
+        <li><strong>Wirausaha</strong> — 242 alumni tercatat memiliki bisnis sendiri di berbagai bidang</li>
+      </ul>
+
+      <h2>Yang Membuat Alumni IKASI Berbeda</h2>
+      <p>Pendidikan politeknik dengan penekanan pada praktik lapangan membentuk lulusan yang siap kerja dan adaptif. Alumni IKASI dikenal:</p>
+      <ul>
+        <li>Cepat beradaptasi dengan kondisi lapangan riil</li>
+        <li>Memiliki kemampuan teknis yang solid sejak awal karir</li>
+        <li>Jaringan sesama alumni yang kuat dan saling mendukung</li>
+      </ul>
+
+      <h2>Jadilah Bagian dari Cerita Ini</h2>
+      <p>Kamu alumni IKASI dengan kisah karir atau bisnis yang menarik? Kami ingin menampilkan ceritamu di halaman ini sebagai inspirasi bagi alumni dan adik angkatan. Hubungi kami di <strong>ikasioffice@gmail.com</strong> atau WhatsApp <strong>+62 81234681730</strong>.</p>
+    `
+  },
+
+  'update-ts-polban': {
+    cat: 'Info Kampus',
+    title: 'Update Jurusan Teknik Sipil Polban 2026',
+    date: '24 Mei 2026',
+    author: 'Tim IKASI',
+    readTime: '4 menit baca',
+    body: `
+      <p>Jurusan Teknik Sipil Polban (Politeknik Negeri Bandung) terus berkembang dan beradaptasi dengan kebutuhan industri. Berikut beberapa update terkini yang relevan bagi alumni.</p>
+
+      <h2>Program Studi yang Tersedia</h2>
+      <p>Saat ini Jurusan Teknik Sipil Polban memiliki beberapa program studi, melayani mahasiswa dari jenjang D3 hingga D4 (Sarjana Terapan). Program ini menghasilkan lulusan yang tersebar di seluruh wilayah Indonesia dan luar negeri.</p>
+
+      <h2>Peluang Kolaborasi Alumni-Kampus</h2>
+      <p>IKASI dan Jurusan Teknik Sipil Polban terus mendorong kolaborasi yang saling menguntungkan, antara lain:</p>
+      <ul>
+        <li><strong>Kerja Praktik (KP)</strong> — Alumni yang bersedia menerima mahasiswa KP bisa mendaftarkan diri. Data dari platform menunjukkan ratusan alumni bersedia.</li>
+        <li><strong>Dosen Tamu</strong> — Alumni berpengalaman di industri diundang berbagi pengalaman nyata kepada mahasiswa aktif.</li>
+        <li><strong>Beasiswa & Sponsorship</strong> — Alumni yang ingin berkontribusi pada pendidikan adik angkatan dapat menghubungi pengurus IKASI.</li>
+        <li><strong>Proyek Penelitian</strong> — Kolaborasi riset antara alumni industri dan dosen/mahasiswa.</li>
+      </ul>
+
+      <h2>Cara Terlibat</h2>
+      <p>Tertarik berkontribusi? Hubungi IKASI via:</p>
+      <ul>
+        <li>Email: <strong>ikasioffice@gmail.com</strong></li>
+        <li>WhatsApp: <strong>+62 81234681730</strong></li>
+        <li>Instagram: <strong>@ikasi.poliitb.polban</strong></li>
+      </ul>
+    `
+  },
+
+  'platform-alumni': {
+    cat: 'Pengumuman',
+    title: 'Platform Digital IKASI Resmi Diluncurkan',
+    date: '24 Mei 2026',
+    author: 'Tim IKASI',
+    readTime: '2 menit baca',
+    body: `
+      <p>Kami dengan bangga mengumumkan peluncuran resmi platform digital IKASI di <strong>ikasipolban.com</strong>. Ini merupakan langkah besar dalam upaya kami menghubungkan lebih dari <strong>3.528+ alumni</strong> Teknik Sipil Polban di seluruh Indonesia dan mancanegara.</p>
+
+      <h2>Apa yang Tersedia Sekarang</h2>
+
+      <h3>🔍 Direktori Alumni</h3>
+      <p>Cari dan temukan 1.451 alumni yang telah terdaftar. Bisa filter berdasarkan angkatan, program studi, kota domisili, dan bidang pekerjaan. Setiap profil menampilkan informasi karir dan domisili — kontak lengkap akan tersedia setelah fitur login hadir.</p>
+
+      <h3>💼 Direktori Bisnis Alumni</h3>
+      <p>242 alumni memiliki bisnis yang bisa kamu temukan di sini. Mulai dari kontraktor, konsultan, properti, kuliner, hingga teknologi. Dukung sesama alumni!</p>
+
+      <h3>📅 Per Angkatan</h3>
+      <p>Lihat statistik dan daftar alumni per angkatan, dari 1982 hingga 2023. Kamu bisa melihat siapa saja dari angkatanmu yang sudah terdaftar.</p>
+
+      <h2>Yang Akan Hadir</h2>
+      <ul>
+        <li>🔐 <strong>Login alumni</strong> — untuk mengakses kontak sesama alumni</li>
+        <li>✏️ <strong>Edit profil sendiri</strong> — update data tanpa perlu hubungi pengurus</li>
+        <li>📅 <strong>Event & RSVP</strong> — daftar ke acara IKASI langsung dari website</li>
+      </ul>
+
+      <h2>Daftarkan Data Kamu</h2>
+      <p>Belum ada di database? Hubungi pengurus IKASI untuk menambahkan data kamu, atau isi form pendaftaran yang tersedia di halaman utama.</p>
+
+      <blockquote>
+        Website ini dibangun dengan semangat gotong-royong oleh pengurus IKASI. Mari bersama menjadikan platform ini bermanfaat untuk seluruh alumni.
+      </blockquote>
+    `
+  }
+};
+
+// ─── ROUTING ───
+const slugParam = new URLSearchParams(window.location.search).get('artikel');
+if (slugParam && ARTICLES[slugParam]) {
+  showArticle(slugParam, false);
+}
+
+function showArticle(slug, pushState = true) {
+  const art = ARTICLES[slug];
+  if (!art) return;
+
+  if (pushState) {
+    history.pushState({ slug }, '', `news.html?artikel=${slug}`);
+  }
+
+  document.getElementById('article-content').innerHTML = `
+    <div class="detail-cat">${art.cat}</div>
+    <div class="detail-title">${art.title}</div>
+    <div class="detail-meta">
+      <span>📅 ${art.date}</span>
+      <span>✍️ ${art.author}</span>
+      <span>⏱ ${art.readTime}</span>
+    </div>
+    <hr class="detail-divider" />
+    <div class="detail-body">${art.body}</div>
+  `;
+
+  document.getElementById('list-view').style.display = 'none';
+  document.getElementById('article-detail').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  document.title = `${art.title} — IKASI Polban`;
+}
+
+function showList() {
+  history.pushState({}, '', 'news.html');
+  document.getElementById('article-detail').style.display = 'none';
+  document.getElementById('list-view').style.display = 'block';
+  document.title = 'Berita & Informasi — IKASI Polban';
+}
+
+window.addEventListener('popstate', e => {
+  if (e.state?.slug) showArticle(e.state.slug, false);
+  else showList();
+});
+
+// MOBILE MENU
+function toggleMenu() {
+  document.getElementById('mobileMenu').classList.toggle('open');
+}
+</script>
+
+  <!-- WhatsApp Floating Button -->
+  <a href="https://wa.me/6281234681730?text=Halo%20IKASI%2C%20saya%20ingin%20bertanya%20atau%20bergabung." 
+     target="_blank" rel="noopener noreferrer"
+     title="Chat WhatsApp IKASI"
+     style="position:fixed;bottom:24px;right:24px;z-index:850;width:52px;height:52px;border-radius:50%;background:#25D366;color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(37,211,102,0.4);transition:transform 0.25s,box-shadow 0.25s;text-decoration:none;"
+     onmouseover="this.style.transform='scale(1.1)';this.style.boxShadow='0 6px 28px rgba(37,211,102,0.55)'"
+     onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 4px 20px rgba(37,211,102,0.4)'">
+    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.523 5.85L.057 23.817a.75.75 0 00.921.921l5.967-1.466A11.938 11.938 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.953 0-3.78-.527-5.348-1.445l-.383-.229-3.972.976.996-3.876-.25-.396A9.956 9.956 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
+    </svg>
+  </a>
+
+  <!-- Cookie Consent Banner -->
+  <div id="cookie-banner" style="position:fixed;bottom:0;left:0;right:0;background:rgba(13,13,13,0.97);border-top:1px solid rgba(245,192,0,0.2);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);z-index:999;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
+    <p style="font-size:0.82rem;color:rgba(255,255,255,0.65);margin:0;max-width:700px;line-height:1.6;">
+      🍪 Kami menggunakan cookie untuk analitik pengunjung. <a href="/privacy.html" style="color:#F5C000;text-decoration:underline;">Kebijakan Privasi</a>
+    </p>
+    <div style="display:flex;gap:8px;flex-shrink:0;flex-wrap:wrap;">
+      <button onclick="document.getElementById('cookie-banner').style.display='none';localStorage.setItem('cookie-ok','all');" style="background:#F5C000;color:#0D0D0D;font-size:0.78rem;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;padding:10px 20px;border:none;cursor:pointer;border-radius:2px;">Setuju</button>
+      <button onclick="document.getElementById('cookie-banner').style.display='none';localStorage.setItem('cookie-ok','essential');" style="background:transparent;color:rgba(255,255,255,0.65);font-size:0.78rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:10px 16px;border:1px solid rgba(255,255,255,0.2);cursor:pointer;border-radius:2px;">Esensial saja</button>
+    </div>
+  </div>
+  <script>if(localStorage.getItem('cookie-ok'))document.getElementById('cookie-banner').style.display='none';</script>
+
+</body>
+</html>
