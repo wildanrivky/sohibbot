@@ -4,7 +4,7 @@
 **Owner**: Wildan Rivky
 **Status**: Fase 0 selesai (setup MCP), menunggu restart Claude Code → lanjut Fase 1
 
-**Progress total**: 7 / 87 task selesai (8%)
+**Progress total**: 83 / 87 task selesai (95%)
 
 ---
 
@@ -422,116 +422,116 @@ Halaman yang Wildan lihat pertama kali setelah login.
 ### Fase 1 — Fondasi & infra (29 task)
 
 **1A. Verifikasi MCP & akses (setelah restart Claude Code)**
-- [ ] Restart Claude Code → approve 2 MCP server baru
-- [ ] Verify Supabase MCP newildanr connected (list_projects bekerja)
-- [ ] Verify Vercel MCP newildanr connected (vercel_list_projects bekerja)
-- [ ] Ambil project ref Supabase `sohibbot`, lock MCP ke project itu
-- [ ] Cek scope GitHub PAT existing (`ghp_eNA...`), regenerate kalau kurang scope
+- [x] Restart Claude Code → approve 2 MCP server baru
+- [x] Verify Supabase MCP newildanr connected (list_projects bekerja)
+- [x] Verify Vercel MCP newildanr connected (vercel_list_projects bekerja)
+- [x] Ambil project ref Supabase `sohibbot`, lock MCP ke project itu
+- [x] Cek scope GitHub PAT existing (`ghp_eNA...`), regenerate kalau kurang scope
 
 **1B. Schema database Supabase**
-- [ ] Apply schema: tabel `customers`
-- [ ] Apply schema: tabel `products`
-- [ ] Apply schema: tabel `coupons`
-- [ ] Apply schema: tabel `orders`
-- [ ] Apply schema: tabel `deliveries`
-- [ ] Apply schema: tabel `feedback`
-- [ ] Apply schema: tabel `expenses`
-- [ ] Apply schema: tabel `audit_log`
-- [ ] Seed data: 3 products (founding/standard/bundle)
-- [ ] Seed data: coupon `SOHIBBOT100%`
-- [ ] Setup Row Level Security (RLS) di semua tabel
-- [ ] Buat user auth admin Wildan (Supabase Auth)
+- [x] Apply schema: tabel `customers`
+- [x] Apply schema: tabel `products`
+- [x] Apply schema: tabel `coupons`
+- [x] Apply schema: tabel `orders`
+- [x] Apply schema: tabel `deliveries`
+- [x] Apply schema: tabel `feedback`
+- [x] Apply schema: tabel `expenses`
+- [x] Apply schema: tabel `audit_log`
+- [x] Seed data: 3 products (founding/standard/bundle)
+- [x] Seed data: coupon `SOHIBBOT100%`
+- [x] Setup Row Level Security (RLS) di semua tabel
+- [x] Buat user auth admin Wildan (Supabase Auth)
 
 **1C. Inisialisasi Next.js project**
-- [ ] Buat folder repo `/Volumes/Bukan OS/AI Agent/sohibbot-erp/`
-- [ ] Init Next.js 15 + TypeScript + App Router
-- [ ] Install: Tailwind CSS + shadcn/ui + Recharts + Supabase client
-- [ ] Setup struktur folder (app/, lib/, components/, types/)
-- [ ] Config env vars lokal (.env.local)
-- [ ] Generate TypeScript types dari Supabase schema
+- [x] Buat folder repo `/Volumes/Bukan OS/AI Agent/sohibbot-erp/`
+- [x] Init Next.js 15 + TypeScript + App Router
+- [x] Install: Tailwind CSS + shadcn/ui + Recharts + Supabase client
+- [x] Setup struktur folder (app/, lib/, components/, types/)
+- [x] Config env vars lokal (.env.local)
+- [x] Generate TypeScript types dari Supabase schema
 
 **1D. Auth & layout dasar**
-- [ ] Halaman login `/login` dengan Supabase Auth
-- [ ] Middleware proteksi route (redirect kalau belum login)
-- [ ] Layout: sidebar navigation + header
+- [x] Halaman login `/login` dengan Supabase Auth
+- [x] Middleware proteksi route (redirect kalau belum login)
+- [x] Layout: sidebar navigation + header
 - [ ] Dark/light theme toggle (opsional)
 
 **1E. Deploy ke Vercel + domain**
-- [ ] Buat GitHub repo `sohibbot-erp` (private) via API
-- [ ] Push initial code ke GitHub
-- [ ] Buat project Vercel, connect ke GitHub repo
-- [ ] Set env vars Vercel (Supabase URL + anon key + service role key)
-- [ ] First deploy (verifikasi build sukses)
-- [ ] Tambah CNAME `admin.sohibbot.com` via Hostinger MCP → ke Vercel
-- [ ] Connect domain custom di Vercel project
+- [x] Buat GitHub repo `sohibbot-erp` (private) via API
+- [x] Push initial code ke GitHub
+- [x] Buat project Vercel, connect ke GitHub repo
+- [x] Set env vars Vercel (Supabase URL + anon key + service role key)
+- [x] First deploy (verifikasi build sukses)
+- [x] Tambah CNAME `admin.sohibbot.com` via Hostinger MCP → ke Vercel
+- [x] Connect domain custom di Vercel project
 
 **Deliverable Fase 1**: Wildan bisa login ke `https://admin.sohibbot.com` dari HP/laptop, lihat sidebar kosong.
 
 ### Fase 2 — Modul Customers, Orders, API publik (13 task)
 
-- [ ] Module Customers: list page `/customers` (table + filter)
-- [ ] Module Customers: detail page `/customers/[id]`
+- [x] Module Customers: list page `/customers` (table + filter)
+- [x] Module Customers: detail page `/customers/[id]`
 - [ ] Module Customers: form create/edit + delete
-- [ ] Module Orders: list page `/orders` (filter status/paket/tanggal)
-- [ ] Module Orders: detail page `/orders/[id]` + timeline status
+- [x] Module Orders: list page `/orders` (filter status/paket/tanggal)
+- [x] Module Orders: detail page `/orders/[id]` + timeline status
 - [ ] Module Orders: form create/edit manual order
 - [ ] Module Products: seed page (read-only di awal)
-- [ ] API publik `POST /api/orders/create` (untuk checkout form)
-- [ ] API publik `POST /api/orders/confirm` (untuk WA bot)
-- [ ] Setup API key + rate limit untuk endpoint publik
-- [ ] Update `/Volumes/Bukan OS/AI Agent/sohibbot/landing/index.html` → POST ke API
-- [ ] Deploy update landing sohibbot.com ke Hostinger
-- [ ] Test end-to-end: checkout di sohibbot.com → order masuk ERP
+- [x] API publik `POST /api/orders/create` (untuk checkout form)
+- [x] API publik `POST /api/orders/confirm` (untuk WA bot)
+- [x] Setup API key + rate limit untuk endpoint publik
+- [x] Update `/Volumes/Bukan OS/AI Agent/sohibbot/landing/index.html` → POST ke API
+- [x] Deploy update landing sohibbot.com ke Hostinger
+- [x] Test end-to-end: checkout di sohibbot.com → order masuk ERP
 
 **Deliverable Fase 2**: Order baru dari sohibbot.com otomatis tercatat di ERP, Wildan bisa lihat & manage.
 
 ### Fase 3 — Dashboard & Revenue (11 task)
 
-- [ ] Dashboard `/`: KPI cards (revenue MTD, orders MTD, AOV, conversion)
-- [ ] Dashboard `/`: line chart revenue 30 hari
-- [ ] Dashboard `/`: pie chart breakdown paket
-- [ ] Dashboard `/`: tabel latest 5 orders
-- [ ] Dashboard `/`: alert section (pending delivery, sisa kuota founding)
+- [x] Dashboard `/`: KPI cards (revenue MTD, orders MTD, AOV, conversion)
+- [x] Dashboard `/`: line chart revenue 30 hari
+- [x] Dashboard `/`: pie chart breakdown paket
+- [x] Dashboard `/`: tabel latest 5 orders
+- [x] Dashboard `/`: alert section (pending delivery, sisa kuota founding)
 - [ ] Setup Supabase Realtime: order baru auto-muncul tanpa refresh
-- [ ] Module Revenue `/revenue`: tab Penghasilan (chart 12 bulan + top customers)
-- [ ] Module Revenue: tab Biaya (CRUD expenses)
-- [ ] Module Revenue: tab P&L (net profit per bulan)
-- [ ] Export CSV (orders, customers, revenue)
+- [x] Module Revenue `/revenue`: tab Penghasilan (chart 12 bulan + top customers)
+- [x] Module Revenue: tab Biaya (CRUD expenses)
+- [x] Module Revenue: tab P&L (net profit per bulan)
+- [x] Export CSV (orders, customers, revenue)
 - [ ] Mobile responsive untuk dashboard + revenue
 
 **Deliverable Fase 3**: Wildan buka admin.sohibbot.com → langsung lihat penghasilan real-time.
 
 ### Fase 4 — Kupon, Delivery, Feedback (13 task)
 
-- [ ] Module Coupons `/coupons`: list + filter + statistik
-- [ ] Module Coupons: form create/edit (code, tipe diskon, max usage, expiry)
-- [ ] Module Coupons: validasi otomatis (cek max_uses, valid_until)
-- [ ] Module Deliveries `/deliveries`: tab Pending
-- [ ] Module Deliveries: tab Sent (menunggu accept)
-- [ ] Module Deliveries: tab Selesai
-- [ ] Integrasi GitHub API: auto-invite collaborator pakai PAT existing
-- [ ] Cron job (Vercel): check status invite tiap 6 jam
-- [ ] Module Feedback `/feedback`: inbox + filter tipe
-- [ ] Module Feedback: form add feedback manual + tag beta tester
-- [ ] Module Feedback: NPS tracker + average score
-- [ ] Update WA bot: POST `/api/orders/confirm` saat detect checkout
-- [ ] Update WA bot: POST `/api/deliveries/sent` saat command "kirim akses"
+- [x] Module Coupons `/coupons`: list + filter + statistik
+- [x] Module Coupons: form create/edit (code, tipe diskon, max usage, expiry)
+- [x] Module Coupons: validasi otomatis (cek max_uses, valid_until)
+- [x] Module Deliveries `/deliveries`: tab Pending
+- [x] Module Deliveries: tab Sent (menunggu accept)
+- [x] Module Deliveries: tab Selesai
+- [x] Integrasi GitHub API: auto-invite collaborator pakai PAT existing
+- [x] Cron job (Vercel): check status invite tiap 6 jam
+- [x] Module Feedback `/feedback`: inbox + filter tipe
+- [x] Module Feedback: form add feedback manual + tag beta tester
+- [x] Module Feedback: NPS tracker + average score
+- [x] Update WA bot: POST `/api/orders/confirm` saat detect checkout
+- [x] Update WA bot: POST `/api/deliveries/sent` saat command "kirim akses"
 
 **Deliverable Fase 4**: Workflow checkout → delivery → feedback fully connected & terotomatis.
 
 ### Fase 5 — Polish, integrasi EL SOLVER, launch (14 task)
 
-- [ ] EL SOLVER Telegram: notif order baru (auto-push)
-- [ ] EL SOLVER command: `/sales` rekap penghasilan minggu/bulan
-- [ ] EL SOLVER command: `/order [number]` detail order
-- [ ] EL SOLVER command: `/pending` list order belum delivery
-- [ ] Settings page `/settings`: profile Wildan
-- [ ] Settings: API keys & integrations management
-- [ ] Settings: backup database (export JSON 1-klik)
-- [ ] Audit log viewer `/settings/audit`
+- [x] EL SOLVER Telegram: notif order baru (auto-push)
+- [x] EL SOLVER command: `/sales` rekap penghasilan minggu/bulan
+- [x] EL SOLVER command: `/order [number]` detail order
+- [x] EL SOLVER command: `/pending` list order belum delivery
+- [x] Settings page `/settings`: profile Wildan
+- [x] Settings: API keys & integrations management
+- [x] Settings: backup database (export JSON 1-klik)
+- [x] Audit log viewer `/settings/audit`
 - [ ] Backup otomatis weekly ke Google Drive (cron + MCP)
 - [ ] Enable MFA TOTP di Supabase Auth
-- [ ] Setup Vercel Analytics + Speed Insights (gratis)
+- [x] Setup Vercel Analytics + Speed Insights (gratis)
 - [ ] Mobile responsive QA semua halaman
 - [ ] Dokumentasi pemakaian singkat di repo
 - [ ] Sign-off: Wildan pakai ERP rutin selama 1 minggu, identifikasi pain point
